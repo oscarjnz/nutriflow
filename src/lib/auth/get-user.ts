@@ -36,20 +36,26 @@ export async function requireUser(): Promise<InternalUser> {
   return user;
 }
 
-async function getOrCreateProfile(clerkId: string): Promise<InternalUser> {
-  const existing = await adminDb
-    .select({
-      id: users.id,
-      clerkId: users.clerkId,
-      displayName: users.displayName,
-      locale: users.locale,
-      units: users.units,
-    })
+const PROFILE_COLUMNS = {
+  id: users.id,
+  clerkId: users.clerkId,
+  displayName: users.displayName,
+  locale: users.locale,
+  units: users.units,
+} as const;
+
+async function selectByClerkId(clerkId: string): Promise<InternalUser | null> {
+  const rows = await adminDb
+    .select(PROFILE_COLUMNS)
     .from(users)
     .where(eq(users.clerkId, clerkId))
     .limit(1);
+  return (rows[0] as InternalUser | undefined) ?? null;
+}
 
-  if (existing[0]) return existing[0] as InternalUser;
+async function getOrCreateProfile(clerkId: string): Promise<InternalUser> {
+  const existing = await selectByClerkId(clerkId);
+  if (existing) return existing;
 
   const clerkUser = await clerkCurrentUser();
   const displayName =
@@ -59,10 +65,25 @@ async function getOrCreateProfile(clerkId: string): Promise<InternalUser> {
 
   const id = newId();
 
+  // Concurrent first-load requests (RSC prefetch + page render) race to create
+  // the same profile. onConflictDoNothing on the unique clerk_id makes the
+  // insert idempotent; settings are only seeded by the request that won.
   await adminDb.transaction(async (tx) => {
-    await tx.insert(users).values({ id, clerkId, displayName });
-    await tx.insert(userSettings).values({ userId: id });
+    const inserted = await tx
+      .insert(users)
+      .values({ id, clerkId, displayName })
+      .onConflictDoNothing({ target: users.clerkId })
+      .returning({ id: users.id });
+
+    const winnerId = inserted[0]?.id;
+    if (winnerId) {
+      await tx.insert(userSettings).values({ userId: winnerId }).onConflictDoNothing();
+    }
   });
 
-  return { id, clerkId, displayName, locale: 'es', units: 'metric' };
+  const created = await selectByClerkId(clerkId);
+  if (!created) {
+    throw new Error(`Failed to materialize profile for Clerk user ${clerkId}`);
+  }
+  return created;
 }

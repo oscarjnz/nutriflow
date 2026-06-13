@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import {
   boolean,
   check,
@@ -13,7 +14,6 @@ import {
   unique,
   uuid,
 } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
 
 /**
  * Drizzle schema mirrors the DDL applied by `supabase/migrations/*.sql`.

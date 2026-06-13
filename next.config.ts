@@ -12,11 +12,7 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: {
-    // typedRoutes requires a completed build to generate route types.
-    // Re-enable after `pnpm build` when all routes are stable.
-    typedRoutes: false,
-  },
+  typedRoutes: false,
   // Postgres driver and serwist worker glue are server-only; never bundle for the client.
   serverExternalPackages: ['postgres'],
 };

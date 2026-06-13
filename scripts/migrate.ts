@@ -11,10 +11,11 @@
  *
  * Usage: `pnpm db:migrate`
  */
-import { config } from 'dotenv';
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { config } from 'dotenv';
 import postgres from 'postgres';
 
 config({ path: '.env.local' });

@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
 import { UserButton } from '@clerk/nextjs';
+import type { Metadata } from 'next';
 
 import { SignOutButton } from '@/components/shared/sign-out-button';
 import { ThemeToggle } from '@/components/shared/theme-toggle';

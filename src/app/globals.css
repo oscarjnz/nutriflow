@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@clerk/ui/themes/shadcn.css';
 
 @theme {
   /* Light theme colors (HSL triplets to allow alpha modulation) */

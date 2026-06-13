@@ -59,3 +59,6 @@ public/workbox-*.js.map
 
 # os
 Thumbs.db
+
+# clerk configuration (can include secrets)
+/.clerk/

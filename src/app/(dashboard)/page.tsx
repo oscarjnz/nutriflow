@@ -3,8 +3,7 @@ import { requireUser } from '@/lib/auth/get-user';
 
 export default async function DashboardHomePage() {
   const user = await requireUser();
-  const greetingName =
-    (user.user_metadata?.['full_name'] as string | undefined) ?? user.email ?? 'amigo';
+  const greetingName = user.displayName ?? 'amigo';
 
   return (
     <main className="space-y-6 p-5">
@@ -18,8 +17,7 @@ export default async function DashboardHomePage() {
           <CardTitle>Resumen del dia</CardTitle>
         </CardHeader>
         <CardContent className="text-[var(--color-muted-foreground)] text-sm">
-          El dashboard de macros entra en el Sprint 1. Por ahora la sesion esta lista, el menu
-          inferior funciona y la cuenta esta vinculada a Supabase.
+          El dashboard de macros entra en el Sprint 1. Sesion lista, menu inferior activo.
         </CardContent>
       </Card>
     </main>

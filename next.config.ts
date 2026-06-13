@@ -13,7 +13,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   experimental: {
-    typedRoutes: true,
+    // typedRoutes requires a completed build to generate route types.
+    // Re-enable after `pnpm build` when all routes are stable.
+    typedRoutes: false,
   },
   // Postgres driver and serwist worker glue are server-only; never bundle for the client.
   serverExternalPackages: ['postgres'],

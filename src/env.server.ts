@@ -9,7 +9,10 @@ import { z } from 'zod';
  * secrets out of any file that may be reached from a Client Component.
  */
 const schema = z.object({
-  // Supabase (server)
+  // Clerk
+  CLERK_SECRET_KEY: z.string().min(1, 'CLERK_SECRET_KEY is required'),
+
+  // Supabase (server — DB only, not auth)
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required'),
 
   // Postgres

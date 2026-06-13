@@ -21,6 +21,8 @@
     "db:seed": "tsx scripts/seed-foods.ts"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.5.2",
+    "@clerk/ui": "^1.16.1",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-label": "^2.1.1",

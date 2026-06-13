@@ -1,0 +1,1191 @@
+[
+  {
+    "key": "white_rice_cooked",
+    "source": "usda",
+    "nameEs": "Arroz blanco cocido",
+    "nameEn": "White rice, cooked",
+    "fdcId": 169711,
+    "barcode": null,
+    "calories": 97,
+    "protein": 2.02,
+    "carbs": 21.1,
+    "fat": 0.19,
+    "fiber": 1,
+    "sugar": 0.05,
+    "sodium": 5,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "arroz",
+      "arroz blanco",
+      "arroz cocido"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 158
+    }
+  },
+  {
+    "key": "brown_rice_cooked",
+    "source": "usda",
+    "nameEs": "Arroz integral cocido",
+    "nameEn": "Brown rice, cooked",
+    "fdcId": 2512380,
+    "barcode": null,
+    "calories": 365.59,
+    "protein": 7.25,
+    "carbs": 76.7,
+    "fat": 3.31,
+    "fiber": 3.02,
+    "sugar": null,
+    "sodium": 0,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "arroz integral",
+      "arroz moreno"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 195
+    }
+  },
+  {
+    "key": "oats",
+    "source": "usda",
+    "nameEs": "Avena en hojuelas",
+    "nameEn": "Oats, rolled",
+    "fdcId": 168872,
+    "barcode": null,
+    "calories": 246,
+    "protein": 17.3,
+    "carbs": 66.2,
+    "fat": 7.03,
+    "fiber": 15.4,
+    "sugar": 1.45,
+    "sodium": 4,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "avena",
+      "hojuelas de avena",
+      "oatmeal"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 81
+    }
+  },
+  {
+    "key": "whole_wheat_bread",
+    "source": "usda",
+    "nameEs": "Pan integral",
+    "nameEn": "Whole wheat bread",
+    "fdcId": 172688,
+    "barcode": null,
+    "calories": 252,
+    "protein": 12.4,
+    "carbs": 42.7,
+    "fat": 3.5,
+    "fiber": 6,
+    "sugar": 4.34,
+    "sodium": 455,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "pan integral",
+      "pan de trigo integral"
+    ],
+    "defaultServing": {
+      "label": "rebanada",
+      "grams": 28
+    }
+  },
+  {
+    "key": "cassava",
+    "source": "usda",
+    "nameEs": "Yuca",
+    "nameEn": "Cassava, raw",
+    "fdcId": 169985,
+    "barcode": null,
+    "calories": 160,
+    "protein": 1.36,
+    "carbs": 38.1,
+    "fat": 0.28,
+    "fiber": 1.8,
+    "sugar": 1.7,
+    "sodium": 14,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "yuca",
+      "mandioca",
+      "casava"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 206
+    }
+  },
+  {
+    "key": "sweet_potato",
+    "source": "usda",
+    "nameEs": "Batata",
+    "nameEn": "Sweet potato, raw",
+    "fdcId": 169303,
+    "barcode": null,
+    "calories": 42,
+    "protein": 2.49,
+    "carbs": 8.82,
+    "fat": 0.51,
+    "fiber": 5.3,
+    "sugar": null,
+    "sodium": 6,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "batata",
+      "boniato",
+      "camote",
+      "papa dulce"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 130
+    }
+  },
+  {
+    "key": "potato",
+    "source": "usda",
+    "nameEs": "Papa",
+    "nameEn": "Potato, raw",
+    "fdcId": 170026,
+    "barcode": null,
+    "calories": 77,
+    "protein": 2.05,
+    "carbs": 17.5,
+    "fat": 0.09,
+    "fiber": 2.1,
+    "sugar": 0.82,
+    "sodium": 6,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "papa",
+      "patata"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 173
+    }
+  },
+  {
+    "key": "plantain_ripe",
+    "source": "usda",
+    "nameEs": "Plátano maduro",
+    "nameEn": "Plantain, ripe",
+    "fdcId": 169130,
+    "barcode": null,
+    "calories": 122,
+    "protein": 1.3,
+    "carbs": 31.9,
+    "fat": 0.35,
+    "fiber": 1.7,
+    "sugar": 17.5,
+    "sodium": 4,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "platano maduro",
+      "maduro",
+      "platano"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 179
+    }
+  },
+  {
+    "key": "plantain_green",
+    "source": "usda",
+    "nameEs": "Plátano verde",
+    "nameEn": "Plantain, green",
+    "fdcId": 168215,
+    "barcode": null,
+    "calories": 152,
+    "protein": 1.25,
+    "carbs": 36.7,
+    "fat": 0.07,
+    "fiber": 2.2,
+    "sugar": 2.29,
+    "sodium": 2,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "platano verde",
+      "verde",
+      "tostones"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 179
+    }
+  },
+  {
+    "key": "corn_tortilla",
+    "source": "usda",
+    "nameEs": "Tortilla de maíz",
+    "nameEn": "Corn tortilla",
+    "fdcId": 172738,
+    "barcode": null,
+    "calories": 558,
+    "protein": 7.4,
+    "carbs": 45.7,
+    "fat": 38.5,
+    "fiber": 1.5,
+    "sugar": 0.75,
+    "sodium": 253,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "tortilla",
+      "tortilla de maiz"
+    ],
+    "defaultServing": {
+      "label": "unidad",
+      "grams": 26
+    }
+  },
+  {
+    "key": "pasta_cooked",
+    "source": "usda",
+    "nameEs": "Pasta cocida",
+    "nameEn": "Pasta, cooked",
+    "fdcId": 169751,
+    "barcode": null,
+    "calories": 157,
+    "protein": 5.8,
+    "carbs": 30.6,
+    "fat": 0.93,
+    "fiber": 1.8,
+    "sugar": 0.56,
+    "sodium": 131,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "pasta",
+      "fideos",
+      "espagueti",
+      "macarrones"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 124
+    }
+  },
+  {
+    "key": "red_beans",
+    "source": "usda",
+    "nameEs": "Habichuelas rojas",
+    "nameEn": "Red kidney beans, cooked",
+    "fdcId": 175242,
+    "barcode": null,
+    "calories": 127,
+    "protein": 8.67,
+    "carbs": 22.8,
+    "fat": 0.5,
+    "fiber": 7.4,
+    "sugar": 0.32,
+    "sodium": 238,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "habichuelas",
+      "habichuelas rojas",
+      "frijoles rojos",
+      "porotos rojos"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 177
+    }
+  },
+  {
+    "key": "black_beans",
+    "source": "usda",
+    "nameEs": "Frijoles negros",
+    "nameEn": "Black beans, cooked",
+    "fdcId": 175237,
+    "barcode": null,
+    "calories": 132,
+    "protein": 8.86,
+    "carbs": 23.7,
+    "fat": 0.54,
+    "fiber": 8.7,
+    "sugar": 0.32,
+    "sodium": 237,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "frijoles negros",
+      "habichuelas negras",
+      "caraotas",
+      "porotos negros"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 172
+    }
+  },
+  {
+    "key": "chickpeas",
+    "source": "usda",
+    "nameEs": "Garbanzos",
+    "nameEn": "Chickpeas, cooked",
+    "fdcId": 173799,
+    "barcode": null,
+    "calories": 164,
+    "protein": 8.86,
+    "carbs": 27.4,
+    "fat": 2.59,
+    "fiber": 7.6,
+    "sugar": 4.8,
+    "sodium": 243,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "garbanzos",
+      "garbanzo"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 164
+    }
+  },
+  {
+    "key": "lentils",
+    "source": "usda",
+    "nameEs": "Lentejas",
+    "nameEn": "Lentils, cooked",
+    "fdcId": 175254,
+    "barcode": null,
+    "calories": 114,
+    "protein": 9.02,
+    "carbs": 19.5,
+    "fat": 0.38,
+    "fiber": 7.9,
+    "sugar": 1.8,
+    "sodium": 238,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "lentejas",
+      "lenteja"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 198
+    }
+  },
+  {
+    "key": "chicken_breast",
+    "source": "usda",
+    "nameEs": "Pechuga de pollo",
+    "nameEn": "Chicken breast, cooked",
+    "fdcId": 171477,
+    "barcode": null,
+    "calories": 165,
+    "protein": 31,
+    "carbs": 0,
+    "fat": 3.57,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 74,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "pollo",
+      "pechuga",
+      "pechuga de pollo",
+      "pollo a la plancha"
+    ],
+    "defaultServing": {
+      "label": "porción",
+      "grams": 100
+    }
+  },
+  {
+    "key": "chicken_thigh",
+    "source": "usda",
+    "nameEs": "Muslo de pollo",
+    "nameEn": "Chicken thigh, cooked",
+    "fdcId": 172388,
+    "barcode": null,
+    "calories": 179,
+    "protein": 24.8,
+    "carbs": 0,
+    "fat": 8.15,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 106,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "muslo de pollo",
+      "muslo",
+      "pierna de pollo"
+    ],
+    "defaultServing": {
+      "label": "porción",
+      "grams": 100
+    }
+  },
+  {
+    "key": "ground_beef",
+    "source": "usda",
+    "nameEs": "Carne molida de res",
+    "nameEn": "Ground beef, cooked",
+    "fdcId": 171798,
+    "barcode": null,
+    "calories": 246,
+    "protein": 24,
+    "carbs": 0,
+    "fat": 15.9,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 83,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "carne molida",
+      "carne de res",
+      "carne picada",
+      "molida de res"
+    ],
+    "defaultServing": {
+      "label": "porción",
+      "grams": 100
+    }
+  },
+  {
+    "key": "pork_loin",
+    "source": "usda",
+    "nameEs": "Lomo de cerdo",
+    "nameEn": "Pork loin, cooked",
+    "fdcId": 167842,
+    "barcode": null,
+    "calories": 192,
+    "protein": 26.4,
+    "carbs": 0,
+    "fat": 8.82,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 46,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "cerdo",
+      "lomo de cerdo",
+      "chuleta"
+    ],
+    "defaultServing": {
+      "label": "porción",
+      "grams": 100
+    }
+  },
+  {
+    "key": "egg",
+    "source": "usda",
+    "nameEs": "Huevo entero",
+    "nameEn": "Egg, whole",
+    "fdcId": 171287,
+    "barcode": null,
+    "calories": 143,
+    "protein": 12.6,
+    "carbs": 0.72,
+    "fat": 9.51,
+    "fiber": 0,
+    "sugar": 0.37,
+    "sodium": 142,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "huevo",
+      "huevos",
+      "huevo entero"
+    ],
+    "defaultServing": {
+      "label": "unidad",
+      "grams": 50
+    }
+  },
+  {
+    "key": "tuna_water",
+    "source": "usda",
+    "nameEs": "Atún en agua",
+    "nameEn": "Tuna, canned in water",
+    "fdcId": 334194,
+    "barcode": null,
+    "calories": 90,
+    "protein": 19,
+    "carbs": 0.08,
+    "fat": 0.94,
+    "fiber": null,
+    "sugar": 0,
+    "sodium": 219,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "atun",
+      "atun en agua",
+      "atun enlatado"
+    ],
+    "defaultServing": {
+      "label": "lata",
+      "grams": 142
+    }
+  },
+  {
+    "key": "salmon",
+    "source": "usda",
+    "nameEs": "Salmón",
+    "nameEn": "Salmon, cooked",
+    "fdcId": 175168,
+    "barcode": null,
+    "calories": 206,
+    "protein": 22.1,
+    "carbs": 0,
+    "fat": 12.4,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 61,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "salmon"
+    ],
+    "defaultServing": {
+      "label": "porción",
+      "grams": 100
+    }
+  },
+  {
+    "key": "tilapia",
+    "source": "usda",
+    "nameEs": "Tilapia",
+    "nameEn": "Tilapia, cooked",
+    "fdcId": 175177,
+    "barcode": null,
+    "calories": 128,
+    "protein": 26.2,
+    "carbs": 0,
+    "fat": 2.65,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 56,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "tilapia",
+      "pescado"
+    ],
+    "defaultServing": {
+      "label": "porción",
+      "grams": 100
+    }
+  },
+  {
+    "key": "whole_milk",
+    "source": "usda",
+    "nameEs": "Leche entera",
+    "nameEn": "Whole milk",
+    "fdcId": 746782,
+    "barcode": null,
+    "calories": 60,
+    "protein": 3.27,
+    "carbs": 4.63,
+    "fat": 3.2,
+    "fiber": null,
+    "sugar": 4.81,
+    "sodium": 38,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "leche",
+      "leche entera"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 244
+    }
+  },
+  {
+    "key": "plain_yogurt",
+    "source": "usda",
+    "nameEs": "Yogurt natural",
+    "nameEn": "Plain yogurt",
+    "fdcId": 2259793,
+    "barcode": null,
+    "calories": 77.88,
+    "protein": 3.82,
+    "carbs": 5.57,
+    "fat": 4.48,
+    "fiber": null,
+    "sugar": 4.09,
+    "sodium": 41.8,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "yogurt",
+      "yogur",
+      "yogurt natural"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 245
+    }
+  },
+  {
+    "key": "fresh_cheese",
+    "source": "usda",
+    "nameEs": "Queso fresco",
+    "nameEn": "Fresh cheese (queso fresco)",
+    "fdcId": 172223,
+    "barcode": null,
+    "calories": 299,
+    "protein": 18.1,
+    "carbs": 2.98,
+    "fat": 23.8,
+    "fiber": 0,
+    "sugar": 2.32,
+    "sodium": 751,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "queso fresco",
+      "queso blanco",
+      "queso"
+    ],
+    "defaultServing": {
+      "label": "porción",
+      "grams": 30
+    }
+  },
+  {
+    "key": "butter",
+    "source": "usda",
+    "nameEs": "Mantequilla",
+    "nameEn": "Butter",
+    "fdcId": 173410,
+    "barcode": null,
+    "calories": 717,
+    "protein": 0.85,
+    "carbs": 0.06,
+    "fat": 81.1,
+    "fiber": 0,
+    "sugar": 0.06,
+    "sodium": 643,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "mantequilla",
+      "manteca"
+    ],
+    "defaultServing": {
+      "label": "cucharada",
+      "grams": 14
+    }
+  },
+  {
+    "key": "tomato",
+    "source": "usda",
+    "nameEs": "Tomate",
+    "nameEn": "Tomato, raw",
+    "fdcId": 170457,
+    "barcode": null,
+    "calories": 18,
+    "protein": 0.88,
+    "carbs": 3.89,
+    "fat": 0.2,
+    "fiber": 1.2,
+    "sugar": 2.63,
+    "sodium": 5,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "tomate",
+      "jitomate"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 123
+    }
+  },
+  {
+    "key": "lettuce",
+    "source": "usda",
+    "nameEs": "Lechuga",
+    "nameEn": "Lettuce, raw",
+    "fdcId": 169247,
+    "barcode": null,
+    "calories": 17,
+    "protein": 1.23,
+    "carbs": 3.29,
+    "fat": 0.3,
+    "fiber": 2.1,
+    "sugar": 1.19,
+    "sodium": 8,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "lechuga"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 47
+    }
+  },
+  {
+    "key": "onion",
+    "source": "usda",
+    "nameEs": "Cebolla",
+    "nameEn": "Onion, raw",
+    "fdcId": 170000,
+    "barcode": null,
+    "calories": 40,
+    "protein": 1.1,
+    "carbs": 9.34,
+    "fat": 0.1,
+    "fiber": 1.7,
+    "sugar": 4.24,
+    "sodium": 4,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "cebolla"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 110
+    }
+  },
+  {
+    "key": "garlic",
+    "source": "usda",
+    "nameEs": "Ajo",
+    "nameEn": "Garlic, raw",
+    "fdcId": 1104647,
+    "barcode": null,
+    "calories": 143,
+    "protein": 6.62,
+    "carbs": 28.2,
+    "fat": 0.38,
+    "fiber": 2.7,
+    "sugar": null,
+    "sodium": null,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "ajo",
+      "diente de ajo"
+    ],
+    "defaultServing": {
+      "label": "diente",
+      "grams": 3
+    }
+  },
+  {
+    "key": "carrot",
+    "source": "usda",
+    "nameEs": "Zanahoria",
+    "nameEn": "Carrot, raw",
+    "fdcId": 170393,
+    "barcode": null,
+    "calories": 41,
+    "protein": 0.93,
+    "carbs": 9.58,
+    "fat": 0.24,
+    "fiber": 2.8,
+    "sugar": 4.74,
+    "sodium": 69,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "zanahoria"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 61
+    }
+  },
+  {
+    "key": "broccoli",
+    "source": "usda",
+    "nameEs": "Brócoli",
+    "nameEn": "Broccoli, raw",
+    "fdcId": 747447,
+    "barcode": null,
+    "calories": 31,
+    "protein": 2.57,
+    "carbs": 6.27,
+    "fat": 0.34,
+    "fiber": 2.4,
+    "sugar": 1.4,
+    "sodium": 36,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "brocoli"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 91
+    }
+  },
+  {
+    "key": "bell_pepper",
+    "source": "usda",
+    "nameEs": "Pimiento",
+    "nameEn": "Bell pepper, raw",
+    "fdcId": 170108,
+    "barcode": null,
+    "calories": 26,
+    "protein": 0.99,
+    "carbs": 6.03,
+    "fat": 0.3,
+    "fiber": 2.1,
+    "sugar": 4.2,
+    "sodium": 4,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "pimiento",
+      "pimenton",
+      "aji",
+      "morron"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 119
+    }
+  },
+  {
+    "key": "avocado",
+    "source": "usda",
+    "nameEs": "Aguacate",
+    "nameEn": "Avocado, raw",
+    "fdcId": 171705,
+    "barcode": null,
+    "calories": 160,
+    "protein": 2,
+    "carbs": 8.53,
+    "fat": 14.7,
+    "fiber": 6.7,
+    "sugar": 0.66,
+    "sodium": 7,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "aguacate",
+      "palta"
+    ],
+    "defaultServing": {
+      "label": "unidad",
+      "grams": 150
+    }
+  },
+  {
+    "key": "banana",
+    "source": "usda",
+    "nameEs": "Banana",
+    "nameEn": "Banana, raw",
+    "fdcId": 173944,
+    "barcode": null,
+    "calories": 89,
+    "protein": 1.09,
+    "carbs": 22.8,
+    "fat": 0.33,
+    "fiber": 2.6,
+    "sugar": 12.2,
+    "sodium": 1,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "banana",
+      "guineo",
+      "cambur"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 118
+    }
+  },
+  {
+    "key": "apple",
+    "source": "usda",
+    "nameEs": "Manzana",
+    "nameEn": "Apple, raw",
+    "fdcId": 1750340,
+    "barcode": null,
+    "calories": 64.85,
+    "protein": 0.15,
+    "carbs": 15.7,
+    "fat": 0.16,
+    "fiber": 2.08,
+    "sugar": 13.3,
+    "sodium": 1.01,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "manzana"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 182
+    }
+  },
+  {
+    "key": "orange",
+    "source": "usda",
+    "nameEs": "Naranja",
+    "nameEn": "Orange, raw",
+    "fdcId": 169097,
+    "barcode": null,
+    "calories": 47,
+    "protein": 0.94,
+    "carbs": 11.8,
+    "fat": 0.12,
+    "fiber": 2.4,
+    "sugar": 9.35,
+    "sodium": 0,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "naranja",
+      "china"
+    ],
+    "defaultServing": {
+      "label": "unidad mediana",
+      "grams": 131
+    }
+  },
+  {
+    "key": "papaya",
+    "source": "usda",
+    "nameEs": "Papaya",
+    "nameEn": "Papaya, raw",
+    "fdcId": 169926,
+    "barcode": null,
+    "calories": 43,
+    "protein": 0.47,
+    "carbs": 10.8,
+    "fat": 0.26,
+    "fiber": 1.7,
+    "sugar": 7.82,
+    "sodium": 8,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "papaya",
+      "lechosa",
+      "fruta bomba"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 145
+    }
+  },
+  {
+    "key": "pineapple",
+    "source": "usda",
+    "nameEs": "Piña",
+    "nameEn": "Pineapple, raw",
+    "fdcId": 169124,
+    "barcode": null,
+    "calories": 50,
+    "protein": 0.54,
+    "carbs": 13.1,
+    "fat": 0.12,
+    "fiber": 1.4,
+    "sugar": 9.85,
+    "sodium": 1,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "pina",
+      "ananas"
+    ],
+    "defaultServing": {
+      "label": "taza",
+      "grams": 165
+    }
+  },
+  {
+    "key": "mango",
+    "source": "usda",
+    "nameEs": "Mango",
+    "nameEn": "Mango, raw",
+    "fdcId": 169910,
+    "barcode": null,
+    "calories": 60,
+    "protein": 0.82,
+    "carbs": 15,
+    "fat": 0.38,
+    "fiber": 1.6,
+    "sugar": 13.7,
+    "sodium": 1,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "mango"
+    ],
+    "defaultServing": {
+      "label": "unidad",
+      "grams": 200
+    }
+  },
+  {
+    "key": "olive_oil",
+    "source": "usda",
+    "nameEs": "Aceite de oliva",
+    "nameEn": "Olive oil",
+    "fdcId": 171413,
+    "barcode": null,
+    "calories": 884,
+    "protein": 0,
+    "carbs": 0,
+    "fat": 100,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 2,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "aceite de oliva",
+      "aceite"
+    ],
+    "defaultServing": {
+      "label": "cucharada",
+      "grams": 14
+    }
+  },
+  {
+    "key": "peanut_butter",
+    "source": "usda",
+    "nameEs": "Mantequilla de maní",
+    "nameEn": "Peanut butter",
+    "fdcId": 172470,
+    "barcode": null,
+    "calories": 598,
+    "protein": 22.2,
+    "carbs": 22.3,
+    "fat": 51.4,
+    "fiber": 5,
+    "sugar": 10.5,
+    "sodium": 17,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "mantequilla de mani",
+      "crema de cacahuate",
+      "crema de mani"
+    ],
+    "defaultServing": {
+      "label": "cucharada",
+      "grams": 16
+    }
+  },
+  {
+    "key": "almonds",
+    "source": "usda",
+    "nameEs": "Almendras",
+    "nameEn": "Almonds",
+    "fdcId": 170567,
+    "barcode": null,
+    "calories": 579,
+    "protein": 21.2,
+    "carbs": 21.6,
+    "fat": 49.9,
+    "fiber": 12.5,
+    "sugar": 4.35,
+    "sodium": 1,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "almendras",
+      "almendra"
+    ],
+    "defaultServing": {
+      "label": "puñado",
+      "grams": 28
+    }
+  },
+  {
+    "key": "off_nutella",
+    "source": "off",
+    "nameEs": "Nutella",
+    "nameEn": "Nutella hazelnut spread",
+    "fdcId": null,
+    "barcode": "3017620422003",
+    "calories": 539,
+    "protein": 6.3,
+    "carbs": 57.5,
+    "fat": 30.9,
+    "fiber": null,
+    "sugar": 56.3,
+    "sodium": 42.8,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "nutella",
+      "crema de avellana"
+    ],
+    "defaultServing": null
+  },
+  {
+    "key": "off_coca_cola",
+    "source": "off",
+    "nameEs": "Coca-Cola",
+    "nameEn": "Coca-Cola",
+    "fdcId": null,
+    "barcode": "5449000000996",
+    "calories": 42,
+    "protein": 0,
+    "carbs": 10.6,
+    "fat": 0,
+    "fiber": null,
+    "sugar": 10.6,
+    "sodium": 0,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "coca cola",
+      "coca",
+      "refresco de cola",
+      "gaseosa"
+    ],
+    "defaultServing": null
+  },
+  {
+    "key": "off_oreo",
+    "source": "off",
+    "nameEs": "Galletas Oreo",
+    "nameEn": "Oreo cookies",
+    "fdcId": null,
+    "barcode": "7622210449283",
+    "calories": 467,
+    "protein": 6.3,
+    "carbs": 69,
+    "fat": 17,
+    "fiber": 4,
+    "sugar": 32,
+    "sodium": 196,
+    "servingSize": 100,
+    "servingUnit": "g",
+    "aliases": [
+      "oreo",
+      "galletas oreo"
+    ],
+    "defaultServing": null
+  }
+]

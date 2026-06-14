@@ -1,5 +1,5 @@
 import { UserButton } from '@clerk/nextjs';
-import { Target } from 'lucide-react';
+import { FileText, Target } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -21,7 +21,7 @@ export default async function ProfilePage() {
         <div className="flex items-center gap-3">
           <UserButton />
           <div className="space-y-0.5">
-            <h1 className="text-2xl font-semibold tracking-tight">Perfil</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Perfil</h1>
             {user.displayName && (
               <p className="text-[var(--color-muted-foreground)] text-sm">{user.displayName}</p>
             )}
@@ -49,6 +49,12 @@ export default async function ProfilePage() {
             <Link href="/goals">
               <Target className="h-4 w-4" />
               Ajustar metas
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full">
+            <Link href="/record">
+              <FileText className="h-4 w-4" />
+              Mi record (plan exportable)
             </Link>
           </Button>
           <SignOutButton />

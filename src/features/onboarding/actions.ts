@@ -4,8 +4,11 @@ import { revalidatePath } from 'next/cache';
 
 import { requireUser } from '@/lib/auth/get-user';
 import { type BodyInput, computeBodyPlan } from '@/lib/nutrition/body';
+import { generateMealPlan } from '@/lib/nutrition/meal-plan';
 import { onboardingSchema } from '@/lib/validation/onboarding';
+import { saveActivePlan } from '@/repositories/meal-plans.repo';
 import {
+  getSelectedPlanFoods,
   listSelectableFoods,
   setSelectedFoodIds,
 } from '@/repositories/user-food-selections.repo';
@@ -71,6 +74,33 @@ export async function completeOnboardingAction(input: unknown): Promise<Complete
       fatTarget: plan.macros.fat,
     });
     await setSelectedFoodIds(user, selectedIds);
+
+    // Phase 3: generate and persist the meal plan from the selection. A
+    // generation failure must not block onboarding (the user can regenerate
+    // from the dashboard), so we log it with context and continue.
+    try {
+      const planFoods = await getSelectedPlanFoods(user);
+      const mealPlan = generateMealPlan({
+        calorieTarget: plan.calorieTarget,
+        macros: plan.macros,
+        mealsPerDay: data.mealsPerDay,
+        mainMeals: data.mainMeals,
+        foods: planFoods,
+      });
+      await saveActivePlan(user, {
+        calorieTarget: plan.calorieTarget,
+        proteinTarget: plan.macros.protein,
+        carbsTarget: plan.macros.carbs,
+        fatTarget: plan.macros.fat,
+        mealsPerDay: data.mealsPerDay,
+        mainMeals: data.mainMeals,
+        suggestionStyle: data.suggestionStyle,
+        plan: mealPlan,
+      });
+    } catch (genErr: unknown) {
+      console.error('completeOnboardingAction: meal plan generation', genErr);
+    }
+
     revalidatePath('/');
     return { ok: true };
   } catch (err: unknown) {

@@ -208,11 +208,23 @@ export function OnboardingClient({ defaults }: { defaults: OnboardingDefaults })
         </div>
       </header>
 
-      <div key={step} className="flex-1 py-6 [animation:onb-in_260ms_cubic-bezier(0.23,1,0.32,1)_both]">
-        {isResults ? (
+      <div key={saving ? 'saving' : step} className="flex-1 py-6 [animation:onb-in_260ms_cubic-bezier(0.23,1,0.32,1)_both]">
+        {saving ? (
+          <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
+            <Loader2 className="text-[var(--color-primary)] h-9 w-9 animate-spin" />
+            <div className="space-y-1">
+              <p className="text-lg font-semibold tracking-tight">
+                Buscando las mejores comidas para ti
+              </p>
+              <p className="text-[var(--color-muted-foreground)] text-sm">
+                Armamos tu plan con los alimentos que elegiste.
+              </p>
+            </div>
+          </div>
+        ) : isResults ? (
           <div className="space-y-6">
             <div className="space-y-1">
-              <h1 className="text-2xl font-semibold tracking-tight">Tu plan, {a.recordName}</h1>
+              <h1 className="text-2xl font-bold tracking-tight">Tu plan, {a.recordName}</h1>
               <p className="text-[var(--color-muted-foreground)] text-sm">
                 Calculado con tus datos. Podrás ajustarlo cuando quieras.
               </p>
@@ -228,7 +240,7 @@ export function OnboardingClient({ defaults }: { defaults: OnboardingDefaults })
         ) : (
           <div className="space-y-5">
             <div className="space-y-1">
-              <h1 className="text-2xl font-semibold tracking-tight">{current?.title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight">{current?.title}</h1>
               {current?.subtitle && (
                 <p className="text-[var(--color-muted-foreground)] text-sm">{current.subtitle}</p>
               )}
@@ -238,27 +250,20 @@ export function OnboardingClient({ defaults }: { defaults: OnboardingDefaults })
         )}
       </div>
 
-      <footer className="sticky bottom-0 bg-[var(--color-background)] pb-[env(safe-area-inset-bottom)] pt-3">
-        {isResults ? (
-          <Button className="w-full" disabled={saving || !plan} onClick={finish}>
-            {saving ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Guardando…
-              </>
-            ) : (
-              <>
-                <Check className="h-4 w-4" />
-                Confirmar y empezar
-              </>
-            )}
-          </Button>
-        ) : (
-          <Button className="w-full" onClick={next}>
-            Continuar
-          </Button>
-        )}
-      </footer>
+      {!saving && (
+        <footer className="sticky bottom-0 bg-[var(--color-background)] pb-[env(safe-area-inset-bottom)] pt-3">
+          {isResults ? (
+            <Button className="w-full" disabled={!plan} onClick={finish}>
+              <Check className="h-4 w-4" />
+              Confirmar y empezar
+            </Button>
+          ) : (
+            <Button className="w-full" onClick={next}>
+              Continuar
+            </Button>
+          )}
+        </footer>
+      )}
 
       <style>{`@keyframes onb-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }`}</style>
     </main>

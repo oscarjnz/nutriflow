@@ -215,6 +215,50 @@ export const userFoodSelections = pgTable(
   ],
 );
 
+export const mealPlans = pgTable(
+  'meal_plans',
+  {
+    id: uuid().primaryKey(),
+    userId: uuid()
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    calorieTarget: integer().notNull(),
+    proteinTarget: integer().notNull(),
+    carbsTarget: integer().notNull(),
+    fatTarget: integer().notNull(),
+    mealsPerDay: integer().notNull(),
+    mainMeals: integer().notNull(),
+    suggestionStyle: text().$type<'recipes' | 'ingredients' | 'mixed'>(),
+    active: boolean().notNull().default(true),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    deletedAt: timestamp({ withTimezone: true }),
+  },
+  (t) => [index('meal_plans_user_active_idx').on(t.userId)],
+);
+
+export const mealPlanItems = pgTable(
+  'meal_plan_items',
+  {
+    id: uuid().primaryKey(),
+    mealPlanId: uuid()
+      .notNull()
+      .references(() => mealPlans.id, { onDelete: 'cascade' }),
+    slot: integer().notNull(),
+    mealType: text().notNull().$type<'breakfast' | 'lunch' | 'dinner' | 'snack'>(),
+    position: integer().notNull().default(0),
+    foodId: uuid()
+      .notNull()
+      .references(() => foods.id, { onDelete: 'cascade' }),
+    grams: numeric({ precision: 8, scale: 2 }).notNull(),
+    caloriesSnapshot: numeric({ precision: 8, scale: 2 }).notNull(),
+    proteinSnapshot: numeric({ precision: 8, scale: 2 }).notNull(),
+    carbsSnapshot: numeric({ precision: 8, scale: 2 }).notNull(),
+    fatSnapshot: numeric({ precision: 8, scale: 2 }).notNull(),
+  },
+  (t) => [index('meal_plan_items_plan_idx').on(t.mealPlanId)],
+);
+
 export const userGoals = pgTable(
   'user_goals',
   {
@@ -406,6 +450,8 @@ export const schema = {
   userSettings,
   userProfiles,
   userFoodSelections,
+  mealPlans,
+  mealPlanItems,
   userGoals,
   mealLogs,
   mealItems,

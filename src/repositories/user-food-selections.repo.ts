@@ -2,9 +2,10 @@ import 'server-only';
 
 import { asc, eq, ne } from 'drizzle-orm';
 
-import { adminDb, withUserContext } from '@/db/client';
+import { adminDb, type AppDb, withUserContext } from '@/db/client';
 import { foods, userFoodSelections } from '@/db/schema';
 import type { SelectableCategory, SelectableFood } from '@/features/onboarding/food-selection';
+import type { PlanCategory, PlanFoodInput } from '@/lib/nutrition/meal-plan';
 
 import type { AppUserRef } from './meal-logs.repo';
 
@@ -25,6 +26,42 @@ export async function listSelectableFoods(): Promise<SelectableFood[]> {
     nameEs: r.nameEs,
     category: r.category as SelectableCategory,
   }));
+}
+
+/**
+ * The user's selected foods with the nutrition the meal generator needs.
+ * Excludes 'other' so a stray branded product can't enter plan generation.
+ */
+export async function getSelectedPlanFoods(user: AppUserRef): Promise<PlanFoodInput[]> {
+  const rows = await withUserContext(user.clerkId, (tx: AppDb) =>
+    tx
+      .select({
+        id: foods.id,
+        nameEs: foods.nameEs,
+        category: foods.category,
+        calories: foods.calories,
+        protein: foods.protein,
+        carbs: foods.carbs,
+        fat: foods.fat,
+      })
+      .from(userFoodSelections)
+      .innerJoin(foods, eq(userFoodSelections.foodId, foods.id))
+      .where(eq(userFoodSelections.userId, user.id)),
+  );
+
+  return rows
+    .filter((r) => r.category !== 'other')
+    .map((r) => ({
+      id: r.id,
+      nameEs: r.nameEs,
+      category: r.category as PlanCategory,
+      per100g: {
+        calories: Number(r.calories),
+        protein: Number(r.protein),
+        carbs: Number(r.carbs),
+        fat: Number(r.fat),
+      },
+    }));
 }
 
 /** Food ids the user currently has marked as available. */

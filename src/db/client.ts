@@ -55,27 +55,31 @@ const pooledSql = postgres(env.DATABASE_URL_POOLER, {
 const pooledDb: AppDb = drizzle(pooledSql, { schema, casing: 'snake_case' });
 
 /**
- * Execute `fn` inside a transaction with RLS context bound to `userId`.
+ * Execute `fn` inside a transaction with RLS context bound to a Clerk user.
  *
  * Pattern:
- *   `set_config('request.jwt.claims', '{ "sub": "<userId>", "role": "authenticated" }', true)`
+ *   `set_config('request.jwt.claims', '{ "sub": "<clerkId>", "role": "authenticated" }', true)`
  *   `set local role authenticated`
+ *
+ * The `sub` is the **Clerk user id** so the `app_user_id()` SQL helper (see
+ * migration 0011) resolves it to the internal UUID via the clerk_id mapping —
+ * the same resolution path a direct browser query with a Clerk token uses.
  *
  * Both settings are transaction-local (`true` flag / `set local`), so they
  * never leak across requests even if the pooler reuses the underlying
  * connection.
  *
- * `userId` MUST come from a verified Supabase session (via
- * `supabase.auth.getUser()`), never from a raw client-supplied value.
+ * `clerkId` MUST come from a verified Clerk session (via `auth()`), never from
+ * a raw client-supplied value.
  */
 export async function withUserContext<T>(
-  userId: string,
+  clerkId: string,
   fn: (tx: AppDb) => Promise<T>,
 ): Promise<T> {
-  if (!userId) {
-    throw new Error('withUserContext: userId must be a non-empty string');
+  if (!clerkId) {
+    throw new Error('withUserContext: clerkId must be a non-empty string');
   }
-  const claims = JSON.stringify({ sub: userId, role: 'authenticated' });
+  const claims = JSON.stringify({ sub: clerkId, role: 'authenticated' });
   return pooledDb.transaction(async (tx) => {
     await tx.execute(sql`select set_config('request.jwt.claims', ${claims}, true)`);
     await tx.execute(sql`set local role authenticated`);

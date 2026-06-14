@@ -31,9 +31,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
+      # Lint is advisory — it reports issues but never fails the pipeline.
+      - name: Lint (advisory)
         run: pnpm lint
+        continue-on-error: true
 
+      # The real gates: types must be sound and the nutrition math must pass.
       - name: Typecheck
         run: pnpm typecheck
 

@@ -33,20 +33,29 @@ export interface CreateMealLogParams {
   items: PreparedMealItem[];
 }
 
+/**
+ * The current user, carrying both ids: `clerkId` opens the RLS context,
+ * `id` (internal UUID) is what gets written to user_id columns.
+ */
+export interface AppUserRef {
+  id: string;
+  clerkId: string;
+}
+
 export async function createMealLog(
-  userId: string,
+  user: AppUserRef,
   params: CreateMealLogParams,
 ): Promise<{ mealLogId: string }> {
   if (params.items.length === 0) {
     throw new Error('createMealLog: at least one item is required');
   }
 
-  return withUserContext(userId, async (tx: AppDb) => {
+  return withUserContext(user.clerkId, async (tx: AppDb) => {
     const mealLogId = newId();
 
     await tx.insert(mealLogs).values({
       id: mealLogId,
-      userId,
+      userId: user.id,
       loggedAt: params.loggedAt,
       mealType: params.mealType,
       notes: params.notes ?? null,
@@ -85,11 +94,11 @@ export interface DayMacroTotals {
  * fast and historically accurate.
  */
 export async function getDayMacroTotals(
-  userId: string,
+  user: AppUserRef,
   dayStart: Date,
   dayEnd: Date,
 ): Promise<DayMacroTotals> {
-  return withUserContext(userId, async (tx: AppDb) => {
+  return withUserContext(user.clerkId, async (tx: AppDb) => {
     const rows = await tx
       .select({
         calories: sql<string>`coalesce(sum(${mealItems.caloriesSnapshot}), 0)`,
@@ -101,7 +110,7 @@ export async function getDayMacroTotals(
       .innerJoin(mealLogs, eq(mealItems.mealLogId, mealLogs.id))
       .where(
         and(
-          eq(mealLogs.userId, userId),
+          eq(mealLogs.userId, user.id),
           isNull(mealLogs.deletedAt),
           isNull(mealItems.deletedAt),
           gte(mealLogs.loggedAt, dayStart),

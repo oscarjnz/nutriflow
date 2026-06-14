@@ -10,7 +10,7 @@ import { type ParseResponse, parseResponseSchema } from '@/lib/validation/nlp';
 /**
  * `nlp_cache` is service_role-only (RLS revokes anon/authenticated), so every
  * access goes through `adminDb`. The cache stores the LLM *extraction*
- * (ParseResponse), never the catalog candidates — candidates are re-ranked
+ * (ParseResponse), never the catalog candidates - candidates are re-ranked
  * live so cache hits still reflect the current `foods` table.
  *
  * The unique key is (input_hash, model): bumping the model in env invalidates

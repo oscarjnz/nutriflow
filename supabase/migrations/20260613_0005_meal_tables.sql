@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0005 — Meal logging: meal_logs, meal_items
+-- 0005 - Meal logging: meal_logs, meal_items
 --
 -- `meal_items` stores *snapshots* of macros (calories_snapshot, …) computed
 -- at log time in the application layer (`src/lib/nutrition/`). Future edits

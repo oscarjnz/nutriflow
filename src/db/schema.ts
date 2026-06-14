@@ -18,7 +18,7 @@ import {
 /**
  * Drizzle schema mirrors the DDL applied by `supabase/migrations/*.sql`.
  * SQL is the source of truth; this file exists to give the application
- * type-safe queries. `drizzle-kit generate` is intentionally not used —
+ * type-safe queries. `drizzle-kit generate` is intentionally not used -
  * RLS policies, generated columns, triggers, and extensions all live in
  * hand-written SQL so we keep a single source of truth for migrations.
  *

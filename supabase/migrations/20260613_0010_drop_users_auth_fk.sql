@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0010 — Detach public.users from auth.users
+-- 0010 - Detach public.users from auth.users
 --
 -- With Clerk as the identity provider, rows in auth.users are never created,
 -- so the original `users_id_fkey` (id references auth.users(id)) blocks every

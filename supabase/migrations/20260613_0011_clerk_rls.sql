@@ -1,8 +1,8 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0011 — RLS keyed on the Clerk subject
+-- 0011 - RLS keyed on the Clerk subject
 --
 -- Why: with Clerk as the identity provider, the JWT `sub` claim is the Clerk
--- user id ("user_xxx"), not our internal UUID — so auth.uid() (which casts sub
+-- user id ("user_xxx"), not our internal UUID - so auth.uid() (which casts sub
 -- to uuid) can't be used. `app_user_id()` resolves the internal UUID from the
 -- Clerk sub via the clerk_id mapping. This single function works for BOTH:
 --   * the browser querying Supabase directly with a Clerk third-party token, and

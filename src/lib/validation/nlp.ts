@@ -5,7 +5,7 @@ import { z } from 'zod';
  *
  * Per CLAUDE.md §2/§6 the model's ONLY job is interpretation: pull food
  * mentions out of free text, normalize the name, and guess quantity/unit. It
- * never returns nutritional values and never decides which catalog row wins —
+ * never returns nutritional values and never decides which catalog row wins -
  * that ranking is deterministic TypeScript against `foods` + `food_aliases`.
  *
  * If the model's JSON fails this schema, the result is discarded and the UI

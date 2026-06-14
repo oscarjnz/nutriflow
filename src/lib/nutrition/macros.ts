@@ -100,7 +100,7 @@ function addOptional(acc: number | null, value: number | null): number | null {
 
 /**
  * Atwater energy estimate (4/4/9 kcal per g). Used only to sanity-check
- * catalog rows and surface obviously corrupt USDA/OFF entries during seeding —
+ * catalog rows and surface obviously corrupt USDA/OFF entries during seeding -
  * never to overwrite the source calorie value.
  */
 export function atwaterCalories(protein: number, carbs: number, fat: number): number {

@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0002 — Catalog: foods, food_aliases, barcodes, food_servings
+-- 0002 - Catalog: foods, food_aliases, barcodes, food_servings
 --
 -- These four tables hold the global nutritional catalog. Reads are public;
 -- writes are restricted to service_role (enforced in 0008_rls.sql).

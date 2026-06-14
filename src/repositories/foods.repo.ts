@@ -182,7 +182,7 @@ export function offFoodToResult(off: OffFood): FoodSearchResult {
 /**
  * Free-text food search for manual logging. Same tsvector + trigram signals as
  * `searchFoodCandidates`, but returns the macros and the default serving so the
- * UI can show "por 100 g" and prefill a sensible portion — no second query.
+ * UI can show "por 100 g" and prefill a sensible portion - no second query.
  */
 export async function searchFoods(query: string, limit = 12): Promise<FoodSearchResult[]> {
   const q = query.trim();
@@ -296,7 +296,7 @@ export async function getFoodResultById(foodId: string): Promise<FoodSearchResul
 /**
  * Resolve a barcode to a local food id, importing from Open Food Facts on miss.
  *
- * 1. The `barcodes` table is the dedup key — seeded products and previously
+ * 1. The `barcodes` table is the dedup key - seeded products and previously
  *    imported ones short-circuit here (no OFF call, no duplicate row).
  * 2. On miss, fetch OFF live. If OFF has no usable product, return null.
  * 3. Persist with deterministic ids (uuidv5 of the barcode) so repeat/concurrent

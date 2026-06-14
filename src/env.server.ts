@@ -5,8 +5,8 @@ import { z } from 'zod';
  *
  * Each field is checked the first time it is accessed (and the result cached),
  * not all at once on import. This means a missing/invalid variable only breaks
- * the feature that actually uses it — a missing GROQ_API_KEY breaks the NLP
- * path, not the dashboard — instead of crashing the whole app at boot.
+ * the feature that actually uses it - a missing GROQ_API_KEY breaks the NLP
+ * path, not the dashboard - instead of crashing the whole app at boot.
  *
  * Importing this module from client code throws, because these secrets are
  * never present in the client bundle (no NEXT_PUBLIC_ prefix).
@@ -20,7 +20,7 @@ const fieldSchemas = {
   // Clerk
   CLERK_SECRET_KEY: z.string().min(1, 'CLERK_SECRET_KEY is required'),
 
-  // Supabase (server — DB only, not auth)
+  // Supabase (server - DB only, not auth)
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required'),
 
   // Postgres

@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0012 — user_profiles
+-- 0012 - user_profiles
 --
 -- One row per user holding the onboarding answers AND the deterministic plan
 -- snapshot (BMR/TDEE/BMI/targets) computed from them by src/lib/nutrition/body.ts.

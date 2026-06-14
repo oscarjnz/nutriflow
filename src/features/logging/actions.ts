@@ -34,7 +34,7 @@ export async function searchFoodsAction(query: string): Promise<SearchFoodsResul
 
     // The local catalog is small (curated seed); when it can't satisfy the
     // query, fall back to OFF's full database. Local always ranks first and OFF
-    // failures degrade gracefully — the user still sees local matches.
+    // failures degrade gracefully - the user still sees local matches.
     if (local.length >= OFF_FALLBACK_THRESHOLD || q.length < 3) {
       return { ok: true, foods: local };
     }
@@ -118,7 +118,7 @@ const importLogSchema = quickLogSchema
 
 /**
  * Log an Open Food Facts product selected from search. Imports it into the
- * catalog first (lazy persistence — only foods the user logs get stored) then
+ * catalog first (lazy persistence - only foods the user logs get stored) then
  * records the meal item with `barcode` provenance.
  */
 export async function importAndLogMealAction(input: unknown): Promise<LogMealResult> {

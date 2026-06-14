@@ -2,8 +2,8 @@
  * Curated catalog seed for the LATAM/Spain diet.
  *
  * Two sources, per CLAUDE.md §4:
- *   - USDA FoodData Central — nutrition for whole/unbranded foods (per 100 g).
- *   - Open Food Facts        — packaged products by barcode (per 100 g + EAN).
+ *   - USDA FoodData Central - nutrition for whole/unbranded foods (per 100 g).
+ *   - Open Food Facts        - packaged products by barcode (per 100 g + EAN).
  *
  * Each entry carries the colloquial Spanish names that seed `food_aliases`, so
  * "habichuelas", "frijoles" and "porotos" all resolve to the same beans row.

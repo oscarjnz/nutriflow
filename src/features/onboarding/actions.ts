@@ -5,8 +5,8 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth/get-user';
 import { type BodyInput, computeBodyPlan } from '@/lib/nutrition/body';
 import { onboardingSchema } from '@/lib/validation/onboarding';
-import { saveOnboarding } from '@/repositories/user-profile.repo';
 import { setGoal } from '@/repositories/user-goals.repo';
+import { saveOnboarding } from '@/repositories/user-profile.repo';
 
 export type CompleteOnboardingResult = { ok: true } | { ok: false; error: string };
 

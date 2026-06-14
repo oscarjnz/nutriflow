@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0007 — fasting_sessions, weight_logs, user_streaks
+-- 0007 - fasting_sessions, weight_logs, user_streaks
 --
 -- `fasting_sessions`: end_at null means the session is in progress. The
 -- partial unique index enforces at-most-one active session per user, which

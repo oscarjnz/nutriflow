@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 /**
  * Input boundary for meal logging Server Actions. Server Actions receive data
- * already parsed by these schemas (CLAUDE.md §10) — never raw FormData.
+ * already parsed by these schemas (CLAUDE.md §10) - never raw FormData.
  */
 
 export const mealTypeSchema = z.enum(['breakfast', 'lunch', 'dinner', 'snack']);

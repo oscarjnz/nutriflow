@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0004 — User profile, settings, goals
+-- 0004 - User profile, settings, goals
 --
 -- `public.users` mirrors `auth.users` 1:1 via a SECURITY DEFINER trigger
 -- (`handle_new_auth_user`) attached to `auth.users` AFTER INSERT. The trigger

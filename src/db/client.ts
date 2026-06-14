@@ -9,18 +9,18 @@ import { schema } from './schema';
 /**
  * Database access has two distinct flavors:
  *
- *  1. `adminDb`  — bypasses RLS.
+ *  1. `adminDb`  - bypasses RLS.
  *     Used for migrations, the seed script, catalog mutations, and trusted
  *     server code that operates on `nlp_cache` (which is service_role-only).
  *     Connects via the *direct* port (5432) with a single long-lived
  *     connection. Never expose to user-driven code paths.
  *
- *  2. `withUserContext(userId, fn)` — RLS active under role `authenticated`.
+ *  2. `withUserContext(userId, fn)` - RLS active under role `authenticated`.
  *     Used by every Server Action, Route Handler, and Server Component that
  *     reads or writes user-owned data. Opens a pooled transaction, injects
  *     `request.jwt.claims.sub`, and switches role so that `auth.uid()`
  *     resolves to the caller. RLS policies enforce row visibility even if a
- *     repository forgets the `where user_id = $1` predicate — defense in
+ *     repository forgets the `where user_id = $1` predicate - defense in
  *     depth.
  *
  * The pooled connection uses Supabase's transaction-mode pooler (port 6543),
@@ -62,7 +62,7 @@ const pooledDb: AppDb = drizzle(pooledSql, { schema, casing: 'snake_case' });
  *   `set local role authenticated`
  *
  * The `sub` is the **Clerk user id** so the `app_user_id()` SQL helper (see
- * migration 0011) resolves it to the internal UUID via the clerk_id mapping —
+ * migration 0011) resolves it to the internal UUID via the clerk_id mapping -
  * the same resolution path a direct browser query with a Clerk token uses.
  *
  * Both settings are transaction-local (`true` flag / `set local`), so they
@@ -88,7 +88,7 @@ export async function withUserContext<T>(
 }
 
 /**
- * Execute `fn` inside a transaction with role `anon` — no `auth.uid()`.
+ * Execute `fn` inside a transaction with role `anon` - no `auth.uid()`.
  *
  * Used for unauthenticated reads of the public catalog (foods, aliases,
  * barcodes, food_servings) when there is no session, e.g. on the landing

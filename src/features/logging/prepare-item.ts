@@ -9,7 +9,7 @@ import type { PreparedMealItem } from '@/repositories/meal-logs.repo';
  * Turn a (foodId, grams) selection into a fully-snapshotted meal item.
  *
  * Macros are computed deterministically from the catalog's per-100g values
- * (CLAUDE.md §5 — never the LLM) and frozen into the item, so later catalog
+ * (CLAUDE.md §5 - never the LLM) and frozen into the item, so later catalog
  * edits never rewrite history. Sprint 1 logs in grams; named portions (taza,
  * cucharada) layer on later via food_servings + lib/nutrition/units.
  */

@@ -10,7 +10,7 @@ import type { MealItemSource, MealType } from '@/lib/validation/meal';
 
 /**
  * Meal logging persistence. Every method runs inside `withUserContext` so RLS
- * is active under the `authenticated` role — defense in depth even though each
+ * is active under the `authenticated` role - defense in depth even though each
  * query is also explicitly user-scoped.
  *
  * Macro snapshots are written at log time (CLAUDE.md §7): later edits to the
@@ -90,7 +90,7 @@ export interface DayMacroTotals {
 
 /**
  * Sum macro snapshots for one calendar day [dayStart, dayStart+24h). Aggregation
- * uses the denormalized snapshot columns — no join to `foods` — so it stays
+ * uses the denormalized snapshot columns - no join to `foods` - so it stays
  * fast and historically accurate.
  */
 export async function getDayMacroTotals(

@@ -30,7 +30,7 @@ const MASS_TO_GRAMS: Record<MassUnit, number> = {
  * case-insensitive and accent-insensitive (see `normalizeKey`).
  */
 const UNIT_ALIASES: Readonly<Record<string, CanonicalUnit>> = {
-  // mass — grams
+  // mass - grams
   g: 'g',
   gr: 'g',
   grs: 'g',
@@ -38,31 +38,31 @@ const UNIT_ALIASES: Readonly<Record<string, CanonicalUnit>> = {
   grams: 'g',
   gramo: 'g',
   gramos: 'g',
-  // mass — kilograms
+  // mass - kilograms
   kg: 'kg',
   kgs: 'kg',
   kilo: 'kg',
   kilos: 'kg',
   kilogramo: 'kg',
   kilogramos: 'kg',
-  // mass — milligrams
+  // mass - milligrams
   mg: 'mg',
   miligramo: 'mg',
   miligramos: 'mg',
-  // mass — ounces
+  // mass - ounces
   oz: 'oz',
   onza: 'oz',
   onzas: 'oz',
   ounce: 'oz',
   ounces: 'oz',
-  // mass — pounds
+  // mass - pounds
   lb: 'lb',
   lbs: 'lb',
   libra: 'lb',
   libras: 'lb',
   pound: 'lb',
   pounds: 'lb',
-  // portion — discrete unit
+  // portion - discrete unit
   unit: 'unit',
   units: 'unit',
   unidad: 'unit',
@@ -70,19 +70,19 @@ const UNIT_ALIASES: Readonly<Record<string, CanonicalUnit>> = {
   pieza: 'unit',
   piezas: 'unit',
   u: 'unit',
-  // portion — generic serving
+  // portion - generic serving
   serving: 'serving',
   servings: 'serving',
   porcion: 'serving',
   porciones: 'serving',
   racion: 'serving',
   raciones: 'serving',
-  // portion — cup
+  // portion - cup
   cup: 'cup',
   cups: 'cup',
   taza: 'cup',
   tazas: 'cup',
-  // portion — tablespoon
+  // portion - tablespoon
   tbsp: 'tbsp',
   tablespoon: 'tbsp',
   tablespoons: 'tbsp',
@@ -90,7 +90,7 @@ const UNIT_ALIASES: Readonly<Record<string, CanonicalUnit>> = {
   cucharadas: 'tbsp',
   cda: 'tbsp',
   cdas: 'tbsp',
-  // portion — teaspoon
+  // portion - teaspoon
   tsp: 'tsp',
   teaspoon: 'tsp',
   teaspoons: 'tsp',

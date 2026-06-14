@@ -13,7 +13,7 @@ import { searchFoodCandidates } from '@/repositories/foods.repo';
 import { bumpHit, findCachedParse, persistParse } from '@/repositories/nlp-cache.repo';
 
 /**
- * `parseFoodInput` — the only entry point for turning free text into ranked
+ * `parseFoodInput` - the only entry point for turning free text into ranked
  * catalog candidates.
  *
  * Pipeline (CLAUDE.md §6, Sprint 0 task 10):

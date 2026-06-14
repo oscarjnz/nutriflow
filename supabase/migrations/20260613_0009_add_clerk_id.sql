@@ -8,6 +8,6 @@ ALTER TABLE public.users
   ADD COLUMN IF NOT EXISTS clerk_id TEXT,
   ADD CONSTRAINT users_clerk_id_unique UNIQUE (clerk_id);
 
--- Drop the Supabase Auth trigger — Clerk does not fire auth.users inserts.
+-- Drop the Supabase Auth trigger - Clerk does not fire auth.users inserts.
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.handle_new_auth_user();

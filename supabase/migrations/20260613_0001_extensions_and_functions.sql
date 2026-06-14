@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0001 — Extensions and shared functions
+-- 0001 - Extensions and shared functions
 --
 -- Why pgcrypto: gen_random_uuid() fallback in case any default uses it (UUID
 -- v7s are generated in the application layer with the `uuid` npm package, but

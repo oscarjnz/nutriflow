@@ -1,8 +1,8 @@
 # Migraciones
 
-Hay **dos formas equivalentes** de aplicar una migración. Usa la que prefieras — el resultado es el mismo.
+Hay **dos formas equivalentes** de aplicar una migración. Usa la que prefieras - el resultado es el mismo.
 
-## Opción A — Pegar en Supabase (estilo S.H.S, sin terminal)
+## Opción A - Pegar en Supabase (estilo S.H.S, sin terminal)
 
 1. Abre [Supabase → SQL Editor](https://supabase.com/dashboard/project/_/sql).
 2. Abre el archivo `.sql` de esta carpeta, copia **todo** su contenido.
@@ -10,13 +10,13 @@ Hay **dos formas equivalentes** de aplicar una migración. Usa la que prefieras 
 
 Los archivos son SQL puro y autosuficiente (sin comandos de `psql`, sin variables del runner), así que funcionan tal cual en el editor.
 
-## Opción B — Runner (lo corro yo)
+## Opción B - Runner (lo corro yo)
 
 ```
 pnpm db:migrate
 ```
 
-Aplica solo las migraciones pendientes y las registra en la tabla `_migrations`. Idempotente. **Oscar no necesita correr esto** — lo ejecuto yo cuando hace falta.
+Aplica solo las migraciones pendientes y las registra en la tabla `_migrations`. Idempotente. **Oscar no necesita correr esto** - lo ejecuto yo cuando hace falta.
 
 > Si pegas manualmente (Opción A) y luego se corre el runner (Opción B), el runner intentará re-aplicar esa migración. Por eso **toda migración nueva debe ser idempotente** (ver convención abajo), así pegar y correr son intercambiables sin romper nada.
 

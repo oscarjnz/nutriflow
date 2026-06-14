@@ -1,9 +1,9 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0003 — nlp_cache
+-- 0003 - nlp_cache
 --
 -- Caches LLM-extracted entities by SHA-256(input). The (input_hash, model)
 -- unique constraint invalidates the cache automatically when the model name
--- changes — switching from llama-3.1-8b-instant to a successor model never
+-- changes - switching from llama-3.1-8b-instant to a successor model never
 -- serves stale parses.
 --
 -- last_hit_at is indexed to support a future LRU eviction job (not in Sprint 0).

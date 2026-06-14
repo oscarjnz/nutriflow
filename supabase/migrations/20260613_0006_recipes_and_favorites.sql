@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- 0006 — recipes, recipe_items, favorites
+-- 0006 - recipes, recipe_items, favorites
 --
 -- Recipes are user-owned compositions ("post-workout shake"). At log time the
 -- application flattens a recipe into N meal_items using the same snapshot
@@ -8,7 +8,7 @@
 -- `favorites` is a single 1-tap entry pointing to either a food or a recipe
 -- (the CHECK enforces exactly one target). `position` orders the user's
 -- favorites strip on the dashboard; no UNIQUE on (user_id, position) so the
--- application can reorder without locking — the order is reconciled at write
+-- application can reorder without locking - the order is reconciled at write
 -- time by client code.
 -- ─────────────────────────────────────────────────────────────────────────────
 

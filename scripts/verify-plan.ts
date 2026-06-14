@@ -46,7 +46,7 @@ async function main(): Promise<void> {
       ...byCat('fat', 1),
       ...byCat('dairy', 1),
     ];
-    console.log(`Selectable catalog foods used: ${foods.length}`);
+    console.info(`Selectable catalog foods used: ${foods.length}`);
 
     const plan = generateMealPlan({
       calorieTarget: 2000,
@@ -56,17 +56,17 @@ async function main(): Promise<void> {
       foods,
     });
 
-    console.log(
+    console.info(
       `Plan: ${plan.meals.length} meals, day total ${Math.round(plan.totals.calories)} kcal / ` +
         `${Math.round(plan.totals.protein)}P ${Math.round(plan.totals.carbs)}C ${Math.round(plan.totals.fat)}F`,
     );
     for (const meal of plan.meals) {
-      console.log(`  [${meal.mealType}] ${Math.round(meal.totals.calories)} kcal`);
+      console.info(`  [${meal.mealType}] ${Math.round(meal.totals.calories)} kcal`);
       for (const item of meal.items) {
-        console.log(`    - ${item.nameEs}: ${Math.round(item.grams)} g / ${Math.round(item.calories)} kcal`);
+        console.info(`    - ${item.nameEs}: ${Math.round(item.grams)} g / ${Math.round(item.calories)} kcal`);
       }
     }
-    console.log('\nGenerator runs cleanly on live catalog data.');
+    console.info('\nGenerator runs cleanly on live catalog data.');
   } finally {
     await sql.end({ timeout: 5 });
   }

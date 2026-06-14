@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Check, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import { Logo } from '@/components/shared/logo';
@@ -14,6 +14,7 @@ import {
   type SelectableFood,
   selectionMeetsMinimums,
 } from '@/features/onboarding/food-selection';
+import { commitValue, liveValue } from '@/features/onboarding/number-input';
 import {
   ACTIVITY_OPTIONS,
   DIET_OPTIONS,
@@ -438,6 +439,63 @@ interface StepProps {
   set: <K extends keyof Answers>(key: K, value: Answers[K]) => void;
 }
 
+/**
+ * Numeric input that buffers its own text so the user can type freely - clear
+ * the field, type intermediate values below the minimum, enter decimals - and
+ * only clamps to [min, max] on blur. Naively clamping on every keystroke (the
+ * previous behaviour) snapped the value to the minimum mid-edit, which made the
+ * fields impossible to change. Valid numbers are propagated live; an empty or
+ * partial entry leaves the committed value untouched until blur.
+ */
+function BufferedNumberInput({
+  value,
+  onChange,
+  min,
+  max,
+  ariaLabel,
+  className,
+}: {
+  value: number;
+  onChange: (n: number) => void;
+  min: number;
+  max: number;
+  ariaLabel?: string;
+  className: string;
+}) {
+  const [text, setText] = useState<string>(() => String(value));
+
+  // Sync from the outside only when the committed value truly diverges from
+  // what is typed (e.g. a unit toggle), so live typing is never clobbered.
+  useEffect(() => {
+    setText((prev) => (Number(prev) === value ? prev : String(value)));
+  }, [value]);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value;
+    setText(raw);
+    const live = liveValue(raw);
+    if (live !== null) onChange(live);
+  }
+
+  function handleBlur() {
+    const committed = commitValue(text, value, min, max);
+    onChange(committed);
+    setText(String(committed));
+  }
+
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      value={text}
+      aria-label={ariaLabel}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      className={className}
+    />
+  );
+}
+
 function NumberField({
   label,
   value,
@@ -457,13 +515,12 @@ function NumberField({
     <label className="flex items-center justify-between gap-4">
       <span className="text-sm font-medium">{label}</span>
       <span className="flex items-baseline gap-2">
-        <input
-          type="number"
-          inputMode="numeric"
+        <BufferedNumberInput
           value={value}
+          onChange={onChange}
           min={min}
           max={max}
-          onChange={(e) => onChange(Math.max(min, Math.min(max, Number(e.target.value) || 0)))}
+          ariaLabel={label}
           className="h-11 w-24 rounded-lg border border-[var(--color-input)] bg-[var(--color-background)] px-3 text-right text-base tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
         />
         <span className="text-[var(--color-muted-foreground)] w-8 text-sm">{unit}</span>
@@ -508,25 +565,21 @@ function PersonalStep({ a, set }: StepProps) {
         <div className="flex items-center justify-between gap-4">
           <span className="text-sm font-medium">Altura</span>
           <span className="flex items-baseline gap-2">
-            <input
-              type="number"
-              inputMode="numeric"
+            <BufferedNumberInput
               value={ft}
+              onChange={(n) => set('heightCm', ftInToCm(n, inch))}
               min={3}
               max={8}
-              onChange={(e) => set('heightCm', ftInToCm(Number(e.target.value) || 0, inch))}
-              aria-label="Pies"
+              ariaLabel="Pies"
               className="h-11 w-16 rounded-lg border border-[var(--color-input)] bg-[var(--color-background)] px-3 text-right text-base tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
             />
             <span className="text-[var(--color-muted-foreground)] text-sm">ft</span>
-            <input
-              type="number"
-              inputMode="numeric"
+            <BufferedNumberInput
               value={inch}
+              onChange={(n) => set('heightCm', ftInToCm(ft, n))}
               min={0}
               max={11}
-              onChange={(e) => set('heightCm', ftInToCm(ft, Number(e.target.value) || 0))}
-              aria-label="Pulgadas"
+              ariaLabel="Pulgadas"
               className="h-11 w-16 rounded-lg border border-[var(--color-input)] bg-[var(--color-background)] px-3 text-right text-base tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]"
             />
             <span className="text-[var(--color-muted-foreground)] text-sm">in</span>

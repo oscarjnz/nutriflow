@@ -1,7 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
+import { regenerateActivePlan } from '@/features/meal-plan/generate';
 import { requireUser } from '@/lib/auth/get-user';
 import { type BodyInput, computeBodyPlan } from '@/lib/nutrition/body';
 import { generateMealPlan } from '@/lib/nutrition/meal-plan';
@@ -13,11 +15,13 @@ import {
   setSelectedFoodIds,
 } from '@/repositories/user-food-selections.repo';
 import { setGoal } from '@/repositories/user-goals.repo';
-import { saveOnboarding } from '@/repositories/user-profile.repo';
+import { getProfile, saveOnboarding } from '@/repositories/user-profile.repo';
 
 import { selectionMeetsMinimums } from './food-selection';
 
 export type CompleteOnboardingResult = { ok: true } | { ok: false; error: string };
+
+const foodSelectionsSchema = z.array(z.string().uuid()).max(300);
 
 /**
  * Persist the wizard answers and the deterministic plan they produce.
@@ -106,5 +110,46 @@ export async function completeOnboardingAction(input: unknown): Promise<Complete
   } catch (err: unknown) {
     console.error('completeOnboardingAction', err);
     return { ok: false, error: 'No pudimos guardar tu plan. Intenta de nuevo.' };
+  }
+}
+
+export type UpdateFoodSelectionsResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * Update the user's available-food set from the profile editor and regenerate
+ * the active plan so it reflects the new foods. Mirrors the onboarding step:
+ * ids are validated against the catalog and category minimums re-checked
+ * server-side.
+ */
+export async function updateFoodSelectionsAction(input: unknown): Promise<UpdateFoodSelectionsResult> {
+  const user = await requireUser();
+
+  const parsed = foodSelectionsSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: 'Selección inválida.' };
+  }
+
+  const profile = await getProfile(user.id);
+  if (!profile || profile.calorieTarget === null) {
+    return { ok: false, error: 'Completa tu onboarding antes de editar tus alimentos.' };
+  }
+
+  try {
+    const catalog = await listSelectableFoods();
+    const valid = new Set(catalog.map((f) => f.id));
+    const selectedIds = parsed.data.filter((id) => valid.has(id));
+    if (!selectionMeetsMinimums(new Set(selectedIds), catalog)) {
+      return { ok: false, error: 'Elige los mínimos de alimentos por categoría para continuar.' };
+    }
+
+    await setSelectedFoodIds(user, selectedIds);
+    await regenerateActivePlan(user, profile);
+    revalidatePath('/plan');
+    revalidatePath('/record');
+    revalidatePath('/foods');
+    return { ok: true };
+  } catch (err: unknown) {
+    console.error('updateFoodSelectionsAction', err);
+    return { ok: false, error: 'No pudimos guardar tus alimentos. Intenta de nuevo.' };
   }
 }

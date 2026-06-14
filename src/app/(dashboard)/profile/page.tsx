@@ -1,5 +1,5 @@
 import { UserButton } from '@clerk/nextjs';
-import { FileText, Target } from 'lucide-react';
+import { Carrot, FileText, Target } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -49,6 +49,12 @@ export default async function ProfilePage() {
             <Link href="/goals">
               <Target className="h-4 w-4" />
               Ajustar metas
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full">
+            <Link href="/foods">
+              <Carrot className="h-4 w-4" />
+              Mis alimentos
             </Link>
           </Button>
           <Button asChild variant="outline" className="w-full">

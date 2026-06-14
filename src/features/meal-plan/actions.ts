@@ -3,11 +3,11 @@
 import { revalidatePath } from 'next/cache';
 
 import { requireUser } from '@/lib/auth/get-user';
-import { generateMealPlan } from '@/lib/nutrition/meal-plan';
 import { createMealLog } from '@/repositories/meal-logs.repo';
-import { getActivePlan, saveActivePlan } from '@/repositories/meal-plans.repo';
-import { getSelectedPlanFoods } from '@/repositories/user-food-selections.repo';
+import { getActivePlan } from '@/repositories/meal-plans.repo';
 import { getProfile } from '@/repositories/user-profile.repo';
+
+import { regenerateActivePlan } from './generate';
 
 export type MealPlanActionResult = { ok: true } | { ok: false; error: string };
 
@@ -25,28 +25,7 @@ export async function regeneratePlanAction(): Promise<MealPlanActionResult> {
   }
 
   try {
-    const foods = await getSelectedPlanFoods(user);
-    const plan = generateMealPlan({
-      calorieTarget: profile.calorieTarget,
-      macros: {
-        protein: profile.proteinTarget ?? 0,
-        carbs: profile.carbsTarget ?? 0,
-        fat: profile.fatTarget ?? 0,
-      },
-      mealsPerDay: profile.mealsPerDay,
-      mainMeals: profile.mainMeals,
-      foods,
-    });
-    await saveActivePlan(user, {
-      calorieTarget: profile.calorieTarget,
-      proteinTarget: profile.proteinTarget ?? 0,
-      carbsTarget: profile.carbsTarget ?? 0,
-      fatTarget: profile.fatTarget ?? 0,
-      mealsPerDay: profile.mealsPerDay,
-      mainMeals: profile.mainMeals,
-      suggestionStyle: profile.suggestionStyle,
-      plan,
-    });
+    await regenerateActivePlan(user, profile);
     revalidatePath('/plan');
     revalidatePath('/record');
     return { ok: true };

@@ -31,6 +31,73 @@ export interface OffSeedItem {
   aliases: string[];
 }
 
+/** Coarse taxonomy mirrored by foods.category (migration 0013). */
+export type FoodCategory =
+  | 'grain'
+  | 'legume'
+  | 'protein'
+  | 'dairy'
+  | 'vegetable'
+  | 'fruit'
+  | 'fat'
+  | 'other';
+
+/**
+ * Category for every curated item, keyed by `key`. This is the source of truth
+ * the seed writes into foods.category; migration 0013 carries the same mapping
+ * as a one-time backfill keyed on the deterministic ids. Bulk-imported OFF
+ * products that are not listed here default to 'other'.
+ */
+export const CATEGORY_BY_KEY: Readonly<Record<string, FoodCategory>> = {
+  white_rice_cooked: 'grain',
+  brown_rice_cooked: 'grain',
+  oats: 'grain',
+  whole_wheat_bread: 'grain',
+  cassava: 'grain',
+  sweet_potato: 'grain',
+  potato: 'grain',
+  plantain_ripe: 'grain',
+  plantain_green: 'grain',
+  corn_tortilla: 'grain',
+  pasta_cooked: 'grain',
+  red_beans: 'legume',
+  black_beans: 'legume',
+  chickpeas: 'legume',
+  lentils: 'legume',
+  chicken_breast: 'protein',
+  chicken_thigh: 'protein',
+  ground_beef: 'protein',
+  pork_loin: 'protein',
+  egg: 'protein',
+  tuna_water: 'protein',
+  salmon: 'protein',
+  tilapia: 'protein',
+  whole_milk: 'dairy',
+  plain_yogurt: 'dairy',
+  fresh_cheese: 'dairy',
+  butter: 'fat',
+  olive_oil: 'fat',
+  peanut_butter: 'fat',
+  almonds: 'fat',
+  avocado: 'fat',
+  tomato: 'vegetable',
+  lettuce: 'vegetable',
+  onion: 'vegetable',
+  garlic: 'vegetable',
+  carrot: 'vegetable',
+  broccoli: 'vegetable',
+  bell_pepper: 'vegetable',
+  banana: 'fruit',
+  apple: 'fruit',
+  orange: 'fruit',
+  papaya: 'fruit',
+  pineapple: 'fruit',
+  mango: 'fruit',
+  off_nutella: 'other',
+  off_coca_cola: 'other',
+  off_oreo: 'other',
+};
+
 export const USDA_SEED: readonly UsdaSeedItem[] = [
   // ── Grains & starches ──────────────────────────────────────────────────────
   {

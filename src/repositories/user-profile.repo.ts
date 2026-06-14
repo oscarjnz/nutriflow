@@ -26,6 +26,8 @@ export interface UserProfile {
   diet: 'recommended' | 'high_protein' | 'low_carb' | 'keto' | 'low_fat';
   measurementUnits: 'metric' | 'imperial';
   mealsPerDay: number;
+  mainMeals: number;
+  suggestionStyle: 'recipes' | 'ingredients' | 'mixed' | null;
   intermittentFasting: 'never' | 'tried' | 'current' | 'want' | null;
   hardest: string | null;
   extraGoal: string | null;
@@ -75,6 +77,8 @@ export async function getProfile(userId: string): Promise<UserProfile | null> {
     diet: r.diet,
     measurementUnits: r.measurementUnits,
     mealsPerDay: r.mealsPerDay,
+    mainMeals: r.mainMeals,
+    suggestionStyle: r.suggestionStyle,
     intermittentFasting: r.intermittentFasting,
     hardest: r.hardest,
     extraGoal: r.extraGoal,
@@ -126,6 +130,9 @@ export async function saveOnboarding(
     strengthTraining: input.strengthTraining,
     diet: input.diet,
     measurementUnits: input.measurementUnits,
+    mealsPerDay: input.mealsPerDay,
+    mainMeals: input.mainMeals,
+    suggestionStyle: input.suggestionStyle,
     intermittentFasting: input.intermittentFasting ?? null,
     hardest: input.hardest ?? null,
     extraGoal: input.extraGoal ?? null,

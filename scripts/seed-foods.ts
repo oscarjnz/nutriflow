@@ -25,7 +25,14 @@ import { config } from 'dotenv';
 import postgres from 'postgres';
 import { v5 as uuidv5 } from 'uuid';
 
-import { OFF_SEED, type OffSeedItem, USDA_SEED, type UsdaSeedItem } from './seed-data';
+import {
+  CATEGORY_BY_KEY,
+  type FoodCategory,
+  OFF_SEED,
+  type OffSeedItem,
+  USDA_SEED,
+  type UsdaSeedItem,
+} from './seed-data';
 
 config({ path: '.env.local' });
 
@@ -234,16 +241,17 @@ async function fetchAll(apiKey: string): Promise<ResolvedFood[]> {
 async function upsert(sql: postgres.Sql, foods: ResolvedFood[]): Promise<void> {
   for (const f of foods) {
     const foodId = uuidv5(`food:${f.key}`, SEED_NAMESPACE);
+    const category: FoodCategory = CATEGORY_BY_KEY[f.key] ?? 'other';
 
     await sql.begin(async (tx) => {
       await tx`
         insert into public.foods
           (id, name_en, name_es, source, fdc_id, barcode, calories, protein, carbs,
-           fat, fiber, sugar, sodium, serving_size, serving_unit)
+           fat, fiber, sugar, sodium, serving_size, serving_unit, category)
         values
           (${foodId}, ${f.nameEn}, ${f.nameEs}, ${f.source}, ${f.fdcId}, ${f.barcode},
            ${f.calories}, ${f.protein}, ${f.carbs}, ${f.fat}, ${f.fiber}, ${f.sugar},
-           ${f.sodium}, ${f.servingSize}, ${f.servingUnit})
+           ${f.sodium}, ${f.servingSize}, ${f.servingUnit}, ${category})
         on conflict (id) do update set
           name_en = excluded.name_en,
           name_es = excluded.name_es,
@@ -259,6 +267,7 @@ async function upsert(sql: postgres.Sql, foods: ResolvedFood[]): Promise<void> {
           sodium = excluded.sodium,
           serving_size = excluded.serving_size,
           serving_unit = excluded.serving_unit,
+          category = excluded.category,
           updated_at = now()
       `;
 

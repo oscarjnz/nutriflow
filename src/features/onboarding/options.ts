@@ -46,6 +46,12 @@ export const PACE_OPTIONS: Option<'slow' | 'recommended' | 'fast'>[] = [
   { value: 'fast', label: 'Rápido', description: 'Resultados antes, mayor esfuerzo.' },
 ];
 
+export const SUGGESTION_OPTIONS: Option<'recipes' | 'ingredients' | 'mixed'>[] = [
+  { value: 'recipes', label: 'Recetas completas', description: 'Platos listos para preparar.' },
+  { value: 'ingredients', label: 'Ingredientes sueltos', description: 'Tú combinas a tu gusto.' },
+  { value: 'mixed', label: 'Una mezcla', description: 'Recetas e ingredientes.' },
+];
+
 export const FASTING_OPTIONS: Option<'never' | 'tried' | 'current' | 'want'>[] = [
   { value: 'never', label: 'Nunca', description: 'No lo he probado.' },
   { value: 'tried', label: 'Lo probé', description: 'Lo hice antes, no ahora.' },

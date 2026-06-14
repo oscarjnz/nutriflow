@@ -10,6 +10,11 @@ import { PlanSummary } from '@/components/shared/plan-summary';
 import { Button } from '@/components/ui/button';
 import { completeOnboardingAction } from '@/features/onboarding/actions';
 import {
+  CATEGORY_META,
+  type SelectableFood,
+  selectionMeetsMinimums,
+} from '@/features/onboarding/food-selection';
+import {
   ACTIVITY_OPTIONS,
   DIET_OPTIONS,
   FASTING_OPTIONS,
@@ -18,6 +23,7 @@ import {
   type Option,
   PACE_OPTIONS,
   SEX_OPTIONS,
+  SUGGESTION_OPTIONS,
 } from '@/features/onboarding/options';
 import { type BodyInput, bodyMassIndex, computeBodyPlan } from '@/lib/nutrition/body';
 import type { OnboardingInput } from '@/lib/validation/onboarding';
@@ -31,6 +37,8 @@ type Answers = Omit<OnboardingInput, 'age' | 'heightCm' | 'weightKg' | 'targetWe
 
 export interface OnboardingDefaults {
   recordName: string;
+  selectableFoods: SelectableFood[];
+  selectedFoodIds: string[];
   answers: Partial<Answers>;
 }
 
@@ -72,6 +80,10 @@ export function OnboardingClient({ defaults }: { defaults: OnboardingDefaults })
     strengthTraining: defaults.answers.strengthTraining ?? false,
     diet: defaults.answers.diet ?? 'recommended',
     measurementUnits: defaults.answers.measurementUnits ?? 'metric',
+    mealsPerDay: defaults.answers.mealsPerDay ?? 3,
+    mainMeals: defaults.answers.mainMeals ?? 3,
+    suggestionStyle: defaults.answers.suggestionStyle ?? 'mixed',
+    foodSelections: defaults.selectedFoodIds,
     intermittentFasting: defaults.answers.intermittentFasting ?? 'never',
   });
 
@@ -147,6 +159,10 @@ export function OnboardingClient({ defaults }: { defaults: OnboardingDefaults })
         strengthTraining: a.strengthTraining,
         diet: a.diet,
         measurementUnits: a.measurementUnits,
+        mealsPerDay: a.mealsPerDay,
+        mainMeals: a.mainMeals,
+        suggestionStyle: a.suggestionStyle,
+        foodSelections: a.foodSelections,
         intermittentFasting: a.intermittentFasting,
       };
       const res = await completeOnboardingAction(payload);
@@ -322,6 +338,18 @@ function buildSteps(
           onChange={(v) => set('intermittentFasting', v)}
         />
       ),
+    },
+    {
+      title: 'Tu plan diario',
+      subtitle: 'Cómo organizamos tus comidas.',
+      valid: true,
+      body: <PlanStructureStep a={a} set={set} />,
+    },
+    {
+      title: '¿Qué alimentos tienes a mano?',
+      subtitle: 'Con esto armaremos tus comidas. Marca lo que sueles tener.',
+      valid: selectionMeetsMinimums(new Set(a.foodSelections), defaults.selectableFoods),
+      body: <FoodSelectionStep a={a} set={set} foods={defaults.selectableFoods} />,
     },
     {
       title: '¿Cómo quieres que te llamemos?',
@@ -612,6 +640,136 @@ function TargetStep({ a, set }: StepProps) {
         <p className="text-sm font-medium">¿A qué velocidad?</p>
         <Cards options={PACE_OPTIONS} value={a.pace} onChange={(v) => set('pace', v)} />
       </div>
+    </div>
+  );
+}
+
+function PlanStructureStep({ a, set }: StepProps) {
+  const mealChoices = [2, 3, 4, 5, 6];
+  const maxMain = Math.min(a.mealsPerDay, 4);
+  const mainChoices = Array.from({ length: maxMain }, (_, i) => i + 1);
+
+  function setMeals(n: number) {
+    set('mealsPerDay', n);
+    if (a.mainMeals > n) set('mainMeals', n);
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="space-y-2">
+        <p className="text-sm font-medium">¿Cuántas veces comes al día?</p>
+        <div className="flex flex-wrap gap-2">
+          {mealChoices.map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setMeals(n)}
+              aria-label={`${n} comidas`}
+              className={`h-11 w-11 rounded-lg border text-sm font-semibold tabular-nums transition-[border-color,background-color,transform] duration-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] active:scale-[0.94] ${
+                a.mealsPerDay === n
+                  ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
+                  : 'border-[var(--color-border)]'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <p className="text-sm font-medium">¿Cuántas son comidas principales?</p>
+        <p className="text-[var(--color-muted-foreground)] text-sm">El resto serán snacks.</p>
+        <div className="flex flex-wrap gap-2">
+          {mainChoices.map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => set('mainMeals', n)}
+              aria-label={`${n} comidas principales`}
+              className={`h-11 w-11 rounded-lg border text-sm font-semibold tabular-nums transition-[border-color,background-color,transform] duration-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] active:scale-[0.94] ${
+                a.mainMeals === n
+                  ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
+                  : 'border-[var(--color-border)]'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <p className="text-sm font-medium">¿Cómo prefieres las sugerencias?</p>
+        <Cards
+          options={SUGGESTION_OPTIONS}
+          value={a.suggestionStyle}
+          onChange={(v) => set('suggestionStyle', v)}
+        />
+      </div>
+    </div>
+  );
+}
+
+function FoodSelectionStep({
+  a,
+  set,
+  foods,
+}: StepProps & { foods: SelectableFood[] }) {
+  const selected = new Set(a.foodSelections);
+
+  function toggle(id: string) {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    set('foodSelections', [...next]);
+  }
+
+  return (
+    <div className="space-y-6">
+      {CATEGORY_META.map((cat) => {
+        const items = foods.filter((f) => f.category === cat.value);
+        if (items.length === 0) return null;
+        const count = items.filter((f) => selected.has(f.id)).length;
+        const met = count >= cat.min;
+
+        return (
+          <section key={cat.value} className="space-y-2.5">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-sm font-medium">{cat.label}</p>
+              <span
+                className={`text-xs tabular-nums ${
+                  met
+                    ? 'text-[var(--color-muted-foreground)]'
+                    : 'text-[var(--color-primary)] font-medium'
+                }`}
+              >
+                {cat.min > 0 ? `${count}/${cat.min}` : cat.hint}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {items.map((f) => {
+                const active = selected.has(f.id);
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => toggle(f.id)}
+                    className={`rounded-full border px-3.5 py-2 text-sm transition-[border-color,background-color,transform] duration-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] active:scale-[0.96] ${
+                      active
+                        ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] font-medium'
+                        : 'border-[var(--color-border)] hover:bg-[var(--color-muted)]'
+                    }`}
+                  >
+                    {f.nameEs}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

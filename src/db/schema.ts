@@ -46,6 +46,10 @@ export const foods = pgTable(
     sodium: numeric({ precision: 8, scale: 2 }),
     servingSize: numeric({ precision: 8, scale: 2 }).notNull(),
     servingUnit: text().notNull(),
+    category: text()
+      .notNull()
+      .default('other')
+      .$type<'grain' | 'legume' | 'protein' | 'dairy' | 'vegetable' | 'fruit' | 'fat' | 'other'>(),
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
   },
@@ -53,6 +57,7 @@ export const foods = pgTable(
     check('foods_source_check', sql`${t.source} in ('usda','off','manual')`),
     index('foods_fdc_id_idx').on(t.fdcId),
     index('foods_barcode_idx').on(t.barcode),
+    index('foods_category_idx').on(t.category),
   ],
 );
 
@@ -173,6 +178,7 @@ export const userProfiles = pgTable('user_profiles', {
   diet: text().notNull().$type<'recommended' | 'high_protein' | 'low_carb' | 'keto' | 'low_fat'>(),
   measurementUnits: text().notNull().default('metric').$type<'metric' | 'imperial'>(),
   mealsPerDay: integer().notNull().default(3),
+  mainMeals: integer().notNull().default(3),
   suggestionStyle: text().$type<'recipes' | 'ingredients' | 'mixed'>(),
   planningMode: text().$type<'self' | 'app'>(),
   intermittentFasting: text().$type<'never' | 'tried' | 'current' | 'want'>(),
@@ -191,6 +197,23 @@ export const userProfiles = pgTable('user_profiles', {
   createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
 });
+
+export const userFoodSelections = pgTable(
+  'user_food_selections',
+  {
+    userId: uuid()
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    foodId: uuid()
+      .notNull()
+      .references(() => foods.id, { onDelete: 'cascade' }),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.userId, t.foodId] }),
+    index('user_food_selections_user_idx').on(t.userId),
+  ],
+);
 
 export const userGoals = pgTable(
   'user_goals',
@@ -382,6 +405,7 @@ export const schema = {
   users,
   userSettings,
   userProfiles,
+  userFoodSelections,
   userGoals,
   mealLogs,
   mealItems,

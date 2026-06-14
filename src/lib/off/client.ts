@@ -3,24 +3,27 @@ import 'server-only';
 import { z } from 'zod';
 
 /**
- * Open Food Facts client — live access to OFF's full (~4M product) catalog.
+ * Open Food Facts client - live access to OFF's full (~4M product) catalog.
  *
- * Per CLAUDE.md §3/§4 OFF is free and key-less. We do NOT bulk-import the
- * database (it is multi-GB and would blow the 500MB free tier on rows the
- * household will never eat). Instead we query OFF live for barcode lookups and
- * name search, and the repository layer lazily persists only the products the
- * user actually logs (see `findOrImportByBarcode`). Net effect: all 4M products
- * are reachable, but local storage grows at the user's pace, not OFF's.
+ * Per CLAUDE.md §3/§4 OFF is free and key-less. A curated slice of the bulk
+ * dump is imported into the local catalog (see scripts/import-off-bulk.ts), so
+ * this live client handles only the long tail: per-product barcode lookups and
+ * occasional user-initiated name searches. OFF's reuse policy (1 call = 1 real
+ * scan; scraping is blocked) is respected by keeping this low-volume and
+ * user-driven, never harvesting.
  *
- * Two endpoints, both public and stable:
- *   - Product by barcode: api/v2/product/{ean}.json   (rock-solid, per-product)
- *   - Name search:        cgi/search.pl (es subdomain) (full-text, es-ranked)
+ * Two endpoints, both public and maintained:
+ *   - Product by barcode: api/v2/product/{ean}.json        (per-product, 1 scan)
+ *   - Name search:        search.openfoodfacts.org/search  (Search-a-licious)
  *
  * All nutrition is normalized to per-100 g to match the `foods` convention.
  */
 
 const PRODUCT_ENDPOINT = 'https://world.openfoodfacts.org/api/v2/product';
-const SEARCH_ENDPOINT = 'https://es.openfoodfacts.org/cgi/search.pl';
+// Search-a-licious: OFF's maintained, sanctioned full-text search service. Used
+// only for low-volume, user-initiated name searches (the deprecated cgi/search.pl
+// is avoided). Barcode lookups stay on the per-product v2 API (1 call = 1 scan).
+const SEARCH_ENDPOINT = 'https://search.openfoodfacts.org/search';
 const USER_AGENT = 'NutriFlow/0.1 (https://github.com/oscarjnz/nutriflow)';
 const REQUEST_TIMEOUT_MS = 6000;
 const NUTRIMENT_FIELDS = 'code,product_name,product_name_es,product_name_en,brands,nutriments';
@@ -64,7 +67,7 @@ const productResponseSchema = z.object({
 });
 
 const searchResponseSchema = z.object({
-  products: z.array(productSchema).optional(),
+  hits: z.array(productSchema).optional(),
 });
 
 // ── Public API ───────────────────────────────────────────────────────────────
@@ -91,20 +94,18 @@ export async function searchOffProducts(query: string, limit = 8): Promise<OffFo
   if (q.length < 3) return [];
 
   const url = new URL(SEARCH_ENDPOINT);
-  url.searchParams.set('search_terms', q);
-  url.searchParams.set('search_simple', '1');
-  url.searchParams.set('action', 'process');
-  url.searchParams.set('json', '1');
+  url.searchParams.set('q', q);
+  url.searchParams.set('langs', 'es');
   url.searchParams.set('page_size', String(Math.min(limit * 2, 30)));
   url.searchParams.set('fields', NUTRIMENT_FIELDS);
 
   const json = await fetchJson(url);
   const parsed = searchResponseSchema.safeParse(json);
-  if (!parsed.success || !parsed.data.products) return [];
+  if (!parsed.success || !parsed.data.hits) return [];
 
   const out: OffFood[] = [];
   const seen = new Set<string>();
-  for (const raw of parsed.data.products) {
+  for (const raw of parsed.data.hits) {
     const code = typeof raw.code === 'number' ? String(raw.code) : raw.code;
     if (!code || seen.has(code)) continue;
     const food = normalize(raw, code);

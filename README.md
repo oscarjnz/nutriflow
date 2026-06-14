@@ -38,10 +38,10 @@ Stack: Next.js 15 · React 19 · TypeScript strict · TailwindCSS 4 · Drizzle O
 
 - **Node.js 22.x** (`.nvmrc` lo fija).
 - **pnpm 9+** (`npm install -g pnpm`).
-- Cuenta gratuita en **[Supabase](https://supabase.com)** — solo para Postgres (no para auth).
-- Cuenta gratuita en **[Clerk](https://dashboard.clerk.com)** — autenticacion (10k MAU free, sin tarjeta).
-- Cuenta gratuita en **[Groq](https://console.groq.com)** — LLM para el NLP de logging.
-- API key gratuita de **[USDA FoodData Central](https://fdc.nal.usda.gov/api-key-signup.html)** — solo para sembrar el catalogo.
+- Cuenta gratuita en **[Supabase](https://supabase.com)** - solo para Postgres (no para auth).
+- Cuenta gratuita en **[Clerk](https://dashboard.clerk.com)** - autenticacion (10k MAU free, sin tarjeta).
+- Cuenta gratuita en **[Groq](https://console.groq.com)** - LLM para el NLP de logging.
+- API key gratuita de **[USDA FoodData Central](https://fdc.nal.usda.gov/api-key-signup.html)** - solo para sembrar el catalogo.
 
 > **Por que Clerk y no Supabase Auth:** el SMTP de pruebas de Supabase limita a ~2-3 correos/hora, insuficiente incluso para uso domestico. Clerk free cubre el caso sin friccion.
 
@@ -128,8 +128,8 @@ Pruebalo en **`/test/nlp`** (requiere sesion): escribe «dos huevos fritos y una
 
 El seed ([scripts/seed-foods.ts](scripts/seed-foods.ts)) usa dos fuentes (CLAUDE.md §4):
 
-- **USDA FoodData Central** — nutricion por 100 g de alimentos enteros (arroz, pollo, huevo, aguacate…).
-- **Open Food Facts** — productos empaquetados por codigo de barras (Nutella, Coca-Cola, Oreo…).
+- **USDA FoodData Central** - nutricion por 100 g de alimentos enteros (arroz, pollo, huevo, aguacate…).
+- **Open Food Facts** - productos empaquetados por codigo de barras (Nutella, Coca-Cola, Oreo…).
 
 Resuelve cada item, escribe un snapshot reproducible en `supabase/seed/catalog-snapshot.json`, e inserta de forma idempotente (IDs UUIDv5 deterministas por clave). Re-ejecutar es seguro:
 
@@ -139,6 +139,23 @@ pnpm db:seed --refresh   # vuelve a consultar las APIs
 ```
 
 Para agregar alimentos, edita [scripts/seed-data.ts](scripts/seed-data.ts) y re-corre el seed.
+
+### Import masivo de Open Food Facts (subset curado)
+
+OFF publica su base completa (~4M productos, multi-GB) en [dumps descargables](https://world.openfoodfacts.org/data) y pide reusarla por ahi en vez de raspar el API (su politica: 1 llamada = 1 escaneo real). Como esos 4M no caben en el free tier de Supabase, importamos un subconjunto curado: productos de Espana y LATAM con nutricion completa, rankeados por popularidad. ~30k productos ocupan ~47 MB y dan busqueda por nombre instantanea y offline.
+
+```bash
+# 1. Descarga el Parquet oficial (~7 GB) una sola vez a data/off/food.parquet
+curl -L -o data/off/food.parquet \
+  "https://huggingface.co/datasets/openfoodfacts/product-database/resolve/main/food.parquet"
+
+# 2. Filtra, rankea e importa el top N (idempotente, IDs UUIDv5 = los del runtime)
+pnpm db:import-off                 # top 30k por defecto
+pnpm db:import-off --limit 50000   # mas cobertura
+pnpm db:import-off --dry-run       # reporta sin escribir en la DB
+```
+
+El API en vivo ([src/lib/off/client.ts](src/lib/off/client.ts)) queda solo para la cola larga: lookup por codigo de barras (1 llamada = 1 escaneo) y busqueda por nombre puntual via Search-a-licious. Los datos de OFF son © sus contribuidores bajo licencia ODbL, acreditada en la app.
 
 ---
 
@@ -154,7 +171,8 @@ Para agregar alimentos, edita [scripts/seed-data.ts](scripts/seed-data.ts) y re-
 | `pnpm test` / `pnpm test:watch` | Vitest (unit). |
 | `pnpm test:e2e` | Playwright (instala navegadores con `pnpm exec playwright install chromium`). |
 | `pnpm db:migrate` | Aplica migraciones SQL pendientes. Idempotente. |
-| `pnpm db:seed` | Siembra el catalogo (USDA + Open Food Facts). |
+| `pnpm db:seed` | Siembra el catalogo curado (USDA + 3 OFF de muestra). |
+| `pnpm db:import-off` | Import masivo del subset OFF (Espana+LATAM) desde el Parquet local. |
 | `pnpm db:studio` | Drizzle Studio. |
 
 ---
@@ -165,15 +183,15 @@ Para agregar alimentos, edita [scripts/seed-data.ts](scripts/seed-data.ts) y re-
 
 Clerk es la fuente de identidad. Cada usuario de Clerk (`user_xxx`) se mapea a una fila en `public.users` con un **UUID v7 interno** (`users.id`) y la columna `clerk_id`. En el primer login, [src/lib/auth/get-user.ts](src/lib/auth/get-user.ts) crea el perfil + settings de forma idempotente (`onConflictDoNothing` sobre `clerk_id` para sobrevivir la carrera de requests concurrentes del primer render).
 
-El UUID interno es lo que viaja como `sub` a `withUserContext`, asi que `auth.uid()` en las policies RLS sigue resolviendo correctamente — el modelo de seguridad no cambia respecto al diseno original.
+El UUID interno es lo que viaja como `sub` a `withUserContext`, asi que `auth.uid()` en las policies RLS sigue resolviendo correctamente - el modelo de seguridad no cambia respecto al diseno original.
 
 ### Modelo dual de acceso a Postgres
 
 [`src/db/client.ts`](src/db/client.ts):
 
-- **`adminDb`** — conexion directa (5432), bypassea RLS. Migraciones, seed, catalogo, `nlp_cache`.
-- **`withUserContext(userId, fn)`** — pooler (6543), rol `authenticated`, `auth.uid()` resuelve al usuario. Defensa en profundidad.
-- **`withAnonContext(fn)`** — pooler, rol `anon`. Lecturas publicas del catalogo.
+- **`adminDb`** - conexion directa (5432), bypassea RLS. Migraciones, seed, catalogo, `nlp_cache`.
+- **`withUserContext(userId, fn)`** - pooler (6543), rol `authenticated`, `auth.uid()` resuelve al usuario. Defensa en profundidad.
+- **`withAnonContext(fn)`** - pooler, rol `anon`. Lecturas publicas del catalogo.
 
 `userId` SOLO proviene del UUID interno derivado de la sesion de Clerk, nunca de input del cliente.
 

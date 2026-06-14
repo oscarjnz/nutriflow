@@ -3,6 +3,7 @@ import { Target } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { OffAttribution } from '@/components/shared/off-attribution';
 import { SignOutButton } from '@/components/shared/sign-out-button';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { Button } from '@/components/ui/button';
@@ -37,7 +38,7 @@ export default async function ProfilePage() {
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between gap-4">
               <dt className="text-[var(--color-muted-foreground)]">Nombre</dt>
-              <dd className="font-medium">{user.displayName ?? '—'}</dd>
+              <dd className="font-medium">{user.displayName ?? 'Sin definir'}</dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt className="text-[var(--color-muted-foreground)]">Unidades</dt>
@@ -53,6 +54,8 @@ export default async function ProfilePage() {
           <SignOutButton />
         </CardContent>
       </Card>
+
+      <OffAttribution className="text-center" />
     </main>
   );
 }

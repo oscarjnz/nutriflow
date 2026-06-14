@@ -18,7 +18,8 @@
     "test:e2e": "playwright test",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx scripts/seed-foods.ts"
+    "db:seed": "tsx scripts/seed-foods.ts",
+    "db:import-off": "tsx scripts/import-off-bulk.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.5.2",
@@ -62,6 +63,7 @@
     "@typescript-eslint/parser": "^8.18.0",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.0",
+    "duckdb": "^1.4.4",
     "eslint": "^9.17.0",
     "eslint-config-next": "^15.1.0",
     "eslint-plugin-import": "^2.31.0",

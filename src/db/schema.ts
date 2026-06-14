@@ -154,6 +154,44 @@ export const userSettings = pgTable('user_settings', {
   updatedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
 });
 
+export const userProfiles = pgTable('user_profiles', {
+  userId: uuid()
+    .primaryKey()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  recordName: text(),
+  goal: text().notNull().$type<'lose_fat' | 'gain_muscle' | 'maintain'>(),
+  method: text().notNull().$type<'meal_plan' | 'count_calories'>(),
+  sex: text().notNull().$type<'male' | 'female'>(),
+  age: integer().notNull(),
+  heightCm: numeric({ precision: 5, scale: 1 }).notNull(),
+  weightKg: numeric({ precision: 5, scale: 2 }).notNull(),
+  targetWeightKg: numeric({ precision: 5, scale: 2 }).notNull(),
+  pace: text().notNull().$type<'slow' | 'recommended' | 'fast'>(),
+  activityLevel: text().notNull().$type<'sedentary' | 'light' | 'active' | 'very_active'>(),
+  trainingDays: integer().notNull().default(0),
+  strengthTraining: boolean().notNull().default(false),
+  diet: text().notNull().$type<'recommended' | 'high_protein' | 'low_carb' | 'keto' | 'low_fat'>(),
+  measurementUnits: text().notNull().default('metric').$type<'metric' | 'imperial'>(),
+  mealsPerDay: integer().notNull().default(3),
+  suggestionStyle: text().$type<'recipes' | 'ingredients' | 'mixed'>(),
+  planningMode: text().$type<'self' | 'app'>(),
+  intermittentFasting: text().$type<'never' | 'tried' | 'current' | 'want'>(),
+  hardest: text(),
+  extraGoal: text(),
+  bmr: integer(),
+  tdee: integer(),
+  bmi: numeric({ precision: 4, scale: 1 }),
+  calorieTarget: integer(),
+  proteinTarget: integer(),
+  carbsTarget: integer(),
+  fatTarget: integer(),
+  weeklyRateKg: numeric({ precision: 4, scale: 2 }),
+  estimatedWeeks: integer(),
+  onboardingCompleted: boolean().notNull().default(false),
+  createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+});
+
 export const userGoals = pgTable(
   'user_goals',
   {
@@ -343,6 +381,7 @@ export const schema = {
   nlpCache,
   users,
   userSettings,
+  userProfiles,
   userGoals,
   mealLogs,
   mealItems,

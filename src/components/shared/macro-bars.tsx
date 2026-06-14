@@ -34,21 +34,21 @@ export function MacroBars({ consumed, goal }: MacroBarsProps) {
       consumed: consumed.protein,
       target: goal.proteinTarget,
       unit: 'g',
-      colorVar: 'var(--color-primary)',
+      colorVar: 'var(--color-macro-protein)',
     },
     {
       label: 'Carbohidratos',
       consumed: consumed.carbs,
       target: goal.carbsTarget,
       unit: 'g',
-      colorVar: 'hsl(38 92% 50%)',
+      colorVar: 'var(--color-macro-carbs)',
     },
     {
       label: 'Grasa',
       consumed: consumed.fat,
       target: goal.fatTarget,
       unit: 'g',
-      colorVar: 'hsl(217 91% 60%)',
+      colorVar: 'var(--color-macro-fat)',
     },
   ];
 

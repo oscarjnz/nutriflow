@@ -35,3 +35,12 @@ export const createMealLogSchema = z.object({
 });
 
 export type CreateMealLog = z.infer<typeof createMealLogSchema>;
+
+/** Quick single-food log used by the manual logging UI (grams-based). */
+export const quickLogSchema = z.object({
+  foodId: z.string().uuid(),
+  grams: z.number().positive().max(100_000),
+  mealType: mealTypeSchema,
+});
+
+export type QuickLog = z.infer<typeof quickLogSchema>;

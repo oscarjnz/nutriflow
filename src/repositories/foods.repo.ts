@@ -138,3 +138,81 @@ export async function getFoodForSnapshot(foodId: string): Promise<{
     servingUnit: r.serving_unit,
   };
 }
+
+export interface FoodSearchResult {
+  id: string;
+  nameEs: string;
+  nameEn: string;
+  caloriesPer100g: number;
+  proteinPer100g: number;
+  carbsPer100g: number;
+  fatPer100g: number;
+  defaultServingGrams: number | null;
+  defaultServingLabel: string | null;
+}
+
+/**
+ * Free-text food search for manual logging. Same tsvector + trigram signals as
+ * `searchFoodCandidates`, but returns the macros and the default serving so the
+ * UI can show "por 100 g" and prefill a sensible portion — no second query.
+ */
+export async function searchFoods(query: string, limit = 12): Promise<FoodSearchResult[]> {
+  const q = query.trim();
+  if (q.length === 0) return [];
+
+  const result = await adminDb.execute(sql`
+    with q as (
+      select
+        websearch_to_tsquery('simple', f_unaccent(${q})) as tsq,
+        f_unaccent(lower(${q}))                          as raw
+    ),
+    matches as (
+      select f.id, ts_rank(f.search_vector, q.tsq) as score
+      from foods f, q
+      where q.tsq is not null and f.search_vector @@ q.tsq
+      union all
+      select a.food_id as id, similarity(f_unaccent(lower(a.alias_text)), q.raw) as score
+      from food_aliases a, q
+      where f_unaccent(lower(a.alias_text)) % q.raw
+      union all
+      select f.id, similarity(f_unaccent(lower(f.name_es)), q.raw) as score
+      from foods f, q
+      where f_unaccent(lower(f.name_es)) % q.raw
+    ),
+    ranked as (
+      select id, max(score) as score from matches group by id
+    )
+    select
+      f.id, f.name_es, f.name_en, f.calories, f.protein, f.carbs, f.fat,
+      fs.grams as serving_grams, fs.label as serving_label
+    from ranked
+    join foods f on f.id = ranked.id
+    left join food_servings fs on fs.food_id = f.id and fs.is_default = true
+    order by ranked.score desc
+    limit ${limit}
+  `);
+
+  const rows = result as unknown as Array<{
+    id: string;
+    name_es: string;
+    name_en: string;
+    calories: string;
+    protein: string;
+    carbs: string;
+    fat: string;
+    serving_grams: string | null;
+    serving_label: string | null;
+  }>;
+
+  return rows.map((r) => ({
+    id: r.id,
+    nameEs: r.name_es,
+    nameEn: r.name_en,
+    caloriesPer100g: Number(r.calories),
+    proteinPer100g: Number(r.protein),
+    carbsPer100g: Number(r.carbs),
+    fatPer100g: Number(r.fat),
+    defaultServingGrams: r.serving_grams === null ? null : Number(r.serving_grams),
+    defaultServingLabel: r.serving_label,
+  }));
+}

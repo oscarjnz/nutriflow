@@ -1,9 +1,9 @@
 import 'server-only';
 
-import { and, eq, gte, isNull, lt, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, isNull, lt, sql } from 'drizzle-orm';
 
 import { type AppDb, withUserContext } from '@/db/client';
-import { mealItems, mealLogs } from '@/db/schema';
+import { foods, mealItems, mealLogs } from '@/db/schema';
 import { newId } from '@/lib/crypto/uuid';
 import type { Macros } from '@/lib/nutrition/macros';
 import type { MealItemSource, MealType } from '@/lib/validation/meal';
@@ -125,5 +125,62 @@ export async function getDayMacroTotals(
       carbs: Number(r?.carbs ?? 0),
       fat: Number(r?.fat ?? 0),
     };
+  });
+}
+
+export interface DayEntry {
+  mealItemId: string;
+  mealLogId: string;
+  foodName: string;
+  mealType: MealType;
+  quantityGrams: number;
+  calories: number;
+  loggedAt: Date;
+}
+
+/**
+ * Today's logged items with their food name, newest first, for the dashboard
+ * list. Joins through to `foods` only for the display name; macro figures come
+ * from the frozen snapshot columns.
+ */
+export async function getDayEntries(
+  user: AppUserRef,
+  dayStart: Date,
+  dayEnd: Date,
+): Promise<DayEntry[]> {
+  return withUserContext(user.clerkId, async (tx: AppDb) => {
+    const rows = await tx
+      .select({
+        mealItemId: mealItems.id,
+        mealLogId: mealLogs.id,
+        foodName: foods.nameEs,
+        mealType: mealLogs.mealType,
+        quantityGrams: mealItems.quantityGrams,
+        calories: mealItems.caloriesSnapshot,
+        loggedAt: mealLogs.loggedAt,
+      })
+      .from(mealItems)
+      .innerJoin(mealLogs, eq(mealItems.mealLogId, mealLogs.id))
+      .innerJoin(foods, eq(mealItems.foodId, foods.id))
+      .where(
+        and(
+          eq(mealLogs.userId, user.id),
+          isNull(mealLogs.deletedAt),
+          isNull(mealItems.deletedAt),
+          gte(mealLogs.loggedAt, dayStart),
+          lt(mealLogs.loggedAt, dayEnd),
+        ),
+      )
+      .orderBy(desc(mealLogs.loggedAt));
+
+    return rows.map((r) => ({
+      mealItemId: r.mealItemId,
+      mealLogId: r.mealLogId,
+      foodName: r.foodName,
+      mealType: r.mealType,
+      quantityGrams: Number(r.quantityGrams),
+      calories: Number(r.calories),
+      loggedAt: r.loggedAt,
+    }));
   });
 }

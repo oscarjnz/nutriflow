@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { computeMacros } from '@/lib/nutrition/macros';
+import type { MealItemSource } from '@/lib/validation/meal';
 import { getFoodForSnapshot } from '@/repositories/foods.repo';
 import type { PreparedMealItem } from '@/repositories/meal-logs.repo';
 
@@ -15,6 +16,7 @@ import type { PreparedMealItem } from '@/repositories/meal-logs.repo';
 export async function prepareMealItem(
   foodId: string,
   grams: number,
+  source: MealItemSource = 'manual',
 ): Promise<PreparedMealItem> {
   const food = await getFoodForSnapshot(foodId);
   if (!food) {
@@ -36,7 +38,7 @@ export async function prepareMealItem(
     quantity: grams,
     unit: 'g',
     quantityGrams: grams,
-    source: 'manual',
+    source,
     macros,
   };
 }

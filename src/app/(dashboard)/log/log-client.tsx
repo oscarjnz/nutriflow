@@ -1,12 +1,17 @@
 'use client';
 
-import { Check, Loader2, Minus, Plus, Search } from 'lucide-react';
+import { Barcode, Check, Loader2, Minus, Plus, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { logMealAction, searchFoodsAction } from '@/features/logging/actions';
+import {
+  importAndLogMealAction,
+  logMealAction,
+  lookupBarcodeAction,
+  searchFoodsAction,
+} from '@/features/logging/actions';
 import type { MealType } from '@/lib/validation/meal';
 import type { FoodSearchResult } from '@/repositories/foods.repo';
 
@@ -33,8 +38,11 @@ export function LogClient() {
   const [results, setResults] = useState<FoodSearchResult[]>([]);
   const [selected, setSelected] = useState<FoodSearchResult | null>(null);
   const [grams, setGrams] = useState(100);
+  const [barcodeOpen, setBarcodeOpen] = useState(false);
+  const [barcode, setBarcode] = useState('');
   const [searching, startSearch] = useTransition();
   const [logging, startLog] = useTransition();
+  const [lookingUp, startLookup] = useTransition();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const runSearch = useCallback((q: string) => {
@@ -63,16 +71,41 @@ export function LogClient() {
     setGrams(food.defaultServingGrams ?? 100);
   }
 
+  function resetAfterLog() {
+    setSelected(null);
+    setQuery('');
+    setResults([]);
+    setBarcode('');
+    setBarcodeOpen(false);
+  }
+
   function handleLog() {
     if (!selected) return;
     startLog(async () => {
-      const res = await logMealAction({ foodId: selected.id, grams, mealType });
+      // Local foods log by id; un-imported OFF hits import-then-log by barcode.
+      const res =
+        selected.origin === 'off' && selected.barcode
+          ? await importAndLogMealAction({ barcode: selected.barcode, grams, mealType })
+          : await logMealAction({ foodId: selected.id, grams, mealType });
       if (res.ok) {
         toast.success(`${selected.nameEs} agregado`);
-        setSelected(null);
-        setQuery('');
-        setResults([]);
+        resetAfterLog();
         router.refresh();
+      } else {
+        toast.error(res.error);
+      }
+    });
+  }
+
+  function handleBarcodeLookup() {
+    const code = barcode.trim();
+    if (code.length === 0) return;
+    startLookup(async () => {
+      const res = await lookupBarcodeAction(code);
+      if (res.ok) {
+        setQuery('');
+        setResults([res.food]);
+        pick(res.food);
       } else {
         toast.error(res.error);
       }
@@ -127,6 +160,40 @@ export function LogClient() {
         )}
       </div>
 
+      <div>
+        <button
+          type="button"
+          onClick={() => setBarcodeOpen((o) => !o)}
+          aria-expanded={barcodeOpen}
+          className="text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] inline-flex items-center gap-1.5 text-xs font-medium transition-colors"
+        >
+          <Barcode className="h-3.5 w-3.5" />
+          {barcodeOpen ? 'Buscar por nombre' : '¿Tienes el código de barras?'}
+        </button>
+
+        {barcodeOpen && (
+          <div className="mt-2 flex gap-2">
+            <input
+              value={barcode}
+              onChange={(e) => setBarcode(e.target.value.replace(/[^\d\s]/g, ''))}
+              onKeyDown={(e) => e.key === 'Enter' && handleBarcodeLookup()}
+              inputMode="numeric"
+              placeholder="Ej. 8410376012705"
+              aria-label="Código de barras"
+              className="h-11 flex-1 rounded-lg border border-[var(--color-input)] bg-[var(--color-background)] px-3 text-base tabular-nums placeholder:text-[var(--color-muted-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={lookingUp || barcode.trim().length < 8}
+              onClick={handleBarcodeLookup}
+            >
+              {lookingUp ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Buscar'}
+            </Button>
+          </div>
+        )}
+      </div>
+
       <ul className="space-y-2">
         {results.map((food, i) => {
           const isOpen = selected?.id === food.id;
@@ -146,7 +213,14 @@ export function LogClient() {
                 aria-expanded={isOpen}
               >
                 <span className="min-w-0">
-                  <span className="block truncate font-medium">{food.nameEs}</span>
+                  <span className="flex items-center gap-2">
+                    <span className="truncate font-medium">{food.nameEs}</span>
+                    {food.origin === 'off' && (
+                      <span className="text-[var(--color-muted-foreground)] shrink-0 rounded border border-[var(--color-border)] px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                        OFF
+                      </span>
+                    )}
+                  </span>
                   <span className="text-[var(--color-muted-foreground)] text-xs">
                     {Math.round(food.caloriesPer100g)} kcal / 100 g
                   </span>

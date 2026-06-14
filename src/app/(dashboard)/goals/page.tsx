@@ -18,7 +18,7 @@ export default async function GoalsPage() {
     <main className="space-y-5 p-5">
       <header className="flex items-center justify-between">
         <div className="space-y-0.5">
-          <h1 className="text-2xl font-semibold tracking-tight">Mis metas</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Mis metas</h1>
           <p className="text-[var(--color-muted-foreground)] text-sm">
             Objetivos diarios de calorías y macros.
           </p>

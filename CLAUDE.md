@@ -430,3 +430,49 @@ Entrega siguiendo el protocolo de la seccion 9. Antes de codear, presenta las se
 - Si una libreria propuesta cambia el footprint del proyecto (nueva dependencia mayor), justifica en Architecture
 - Nunca silencies errores. Nunca uses `try/catch` vacios. Cualquier error debe loguearse con contexto o propagarse
 - Si una tarea excede la complejidad razonable de una sola entrega, divide en subtareas explicitas numeradas y pide priorizacion antes de continuar
+
+---
+
+## 14. Sistema de diseno visual (OBLIGATORIO en todo lo nuevo)
+
+> Esta es la fuente de verdad visual. Toda pantalla, componente o feature que se cree o modifique a partir de ahora DEBE seguir estas reglas. Nada se queda fuera: si tocas o creas una superficie y no las cumple, la alineas en la misma entrega. Arquetipo: "Soft Structuralism" para salud/consumer (superficies flotantes, sombras calidas difusas, grotesca limpia, motion contenido). Mobile-first y respetando el mandato de <5s de registro y WCAG 2.2 AA.
+
+### 14.1 Tokens (definidos en `src/app/globals.css`, nunca hardcodear el valor)
+- Color: solo via variables `--color-*` (paleta sage calida, claro y oscuro). Un unico acento: `--color-primary`. Prohibido introducir un acento distinto por pantalla.
+- Elevacion: solo `--shadow-soft` (superficies normales) y `--shadow-float` (foco/hero, dialogs). Las sombras son tintadas al tono calido, nunca negro puro; ya traen realce interior superior. Prohibido `shadow-sm/md/lg` de Tailwind y `rgba(0,0,0,...)` directo.
+- Tipografia: `--font-sans` (Plus Jakarta Sans, cargada con `next/font` en `layout.tsx`). Prohibido Inter/Roboto/Arial/system-ui como fuente de marca.
+- Radios: tarjetas y dialogs `rounded-[1.5rem]`; tiles/filas de lista `rounded-2xl`; inputs/botones `rounded-lg` o `rounded-xl`; chips/pills `rounded-full`. Un solo sistema, sin mezclar fuera de esta escala.
+
+### 14.2 Superficies
+- Toda tarjeta usa el componente `Card` (`src/components/ui/card.tsx`): ya trae radio, borde, `bg-[var(--color-card)]` y `--shadow-soft`. No reconstruyas tarjetas a mano con `border + bg` planos.
+- La tarjeta hero/foco de una vista (ej. el anillo de calorias) lleva `--shadow-float` y puede llevar un tinte sage tenue en degradado superior.
+- Fondo de la app: glow sage fijo definido en `body` (sin blur, sin repaint en scroll). No lo dupliques por pantalla.
+
+### 14.3 Tipografia de pantalla
+- Titulo de pagina (h1): `text-2xl font-bold tracking-tight`. Consistente en TODA vista.
+- Subtitulo/descripcion: `text-sm text-[var(--color-muted-foreground)]`.
+- Numeros: siempre `tabular-nums`.
+
+### 14.4 Motion (contenido y con proposito)
+- Curva estandar: `cubic-bezier(0.23,1,0.32,1)`. Prohibido `linear`/`ease-in-out` por defecto y cambios de estado instantaneos en interacciones clave.
+- Anima solo `transform` y `opacity` (mas `width`/`stroke-dashoffset` ya existentes en barras/anillo). Nunca `top/left/height`.
+- Todo lo que supere un fade simple respeta `prefers-reduced-motion` / `motion-reduce:`.
+- Feedback tactil en controles: `active:scale-[0.97]` (ya en `Button`).
+- `backdrop-blur` solo en elementos fixed/sticky (nav, overlay). Nunca en contenedores que scrollean.
+
+### 14.5 Iconos
+- Libreria unica del proyecto: `lucide-react`. No mezclar con otras familias ni dibujar SVG de iconos a mano.
+
+### 14.6 Reglas duras heredadas
+- Cero em dash (`—`) en cualquier texto visible o comentario. Solo guion normal `-`. (Ver memoria `never-em-dash`.)
+- Texto de UI en espanol; codigo, identificadores y comentarios en ingles.
+- Contraste AA en cada control (botones, inputs, placeholders, focus rings).
+
+### 14.7 Checklist antes de entregar UI
+- [ ] Tarjetas via `Card`; elevaciones solo con `--shadow-soft`/`--shadow-float`.
+- [ ] Color solo por tokens, un unico acento `--color-primary`.
+- [ ] h1 `text-2xl font-bold tracking-tight`; numeros `tabular-nums`.
+- [ ] Radios dentro de la escala 14.1.
+- [ ] Motion con la curva estandar y `motion-reduce` donde aplique.
+- [ ] Probado en claro y oscuro.
+- [ ] Cero em dash. Iconos solo `lucide-react`.

@@ -26,9 +26,19 @@
 
   --radius: 0.75rem;
 
+  /* Soft, warm-tinted ambient elevation (Soft Structuralism): shadows carry the
+     foreground hue rather than pure black, so surfaces feel like they float in
+     warm light instead of being cut out of paper. */
+  --shadow-soft:
+    inset 0 1px 0 hsl(0 0% 100% / 0.6), 0 1px 2px hsl(35 16% 15% / 0.04),
+    0 10px 30px -16px hsl(35 16% 15% / 0.16);
+  --shadow-float:
+    inset 0 1px 0 hsl(0 0% 100% / 0.7), 0 2px 6px hsl(35 16% 15% / 0.05),
+    0 18px 48px -20px hsl(35 16% 15% / 0.22);
+
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    sans-serif;
+    var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
 }
 
 @layer base {
@@ -50,19 +60,40 @@
     --color-macro-protein: hsl(95 38% 52%);
     --color-macro-carbs: hsl(36 85% 55%);
     --color-macro-fat: hsl(18 70% 58%);
+
+    --shadow-soft:
+      inset 0 1px 0 hsl(0 0% 100% / 0.05), 0 1px 2px hsl(0 0% 0% / 0.3),
+      0 12px 32px -16px hsl(0 0% 0% / 0.55);
+    --shadow-float:
+      inset 0 1px 0 hsl(0 0% 100% / 0.07), 0 2px 6px hsl(0 0% 0% / 0.35),
+      0 22px 56px -22px hsl(0 0% 0% / 0.7);
   }
 
   * {
     border-color: var(--color-border);
   }
 
-  html,
-  body {
+  html {
     background-color: var(--color-background);
+  }
+
+  body {
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* Fixed, GPU-cheap depth: a soft sage glow blooming from the top so the
+       cream canvas reads as lit space rather than flat fill. No blur, no scroll
+       repaint; adapts because it is mixed from the live primary token. */
+    background-color: var(--color-background);
+    background-image: radial-gradient(
+      120% 75% at 50% -12%,
+      color-mix(in srgb, var(--color-primary) 9%, transparent),
+      transparent 58%
+    );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
   }
 
   *:focus-visible {

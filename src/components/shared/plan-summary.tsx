@@ -35,7 +35,7 @@ export function PlanSummary({ plan }: { plan: BodyPlan }) {
         {MACROS.map((m) => (
           <div
             key={m.key}
-            className="rounded-xl border border-[var(--color-border)] p-3 text-center"
+            className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-3 text-center shadow-[var(--shadow-soft)]"
           >
             <span
               className="mx-auto mb-1.5 block h-1.5 w-8 rounded-full"

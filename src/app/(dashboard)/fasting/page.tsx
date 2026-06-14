@@ -8,7 +8,7 @@ export default function FastingPage() {
   return (
     <main className="space-y-6 p-5">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Ayuno</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Ayuno</h1>
         <p className="text-[var(--color-muted-foreground)] text-sm">
           Temporizador, historial y rachas.
         </p>

@@ -1,11 +1,21 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import { shadcn } from '@clerk/ui/themes';
 import type { Metadata, Viewport } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 
 import { ThemeProvider } from '@/components/shared/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 
 import './globals.css';
+
+// Plus Jakarta Sans: a warm, slightly rounded grotesk that matches the
+// food-forward sage palette far better than the cold system stack, while
+// staying highly legible at small sizes on mobile. Self-hosted by next/font.
+const sans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: { default: 'NutriFlow', template: '%s · NutriFlow' },
@@ -39,7 +49,7 @@ export default function RootLayout({
 }): React.ReactElement {
   return (
     <ClerkProvider appearance={{ theme: shadcn }}>
-      <html lang="es" suppressHydrationWarning>
+      <html lang="es" className={sans.variable} suppressHydrationWarning>
         <body>
           <ThemeProvider>
             {children}

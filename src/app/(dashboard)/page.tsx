@@ -27,15 +27,15 @@ export default async function DashboardHomePage() {
           <p className="text-[var(--color-muted-foreground)] text-sm">
             Hola{user.displayName ? `, ${user.displayName}` : ''}
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Resumen de hoy</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Resumen de hoy</h1>
         </div>
         <Button asChild variant="ghost" size="sm">
           <Link href="/goals">Metas</Link>
         </Button>
       </header>
 
-      <Card>
-        <CardContent className="pt-5">
+      <Card className="shadow-[var(--shadow-float)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-primary)_5%,var(--color-card)),var(--color-card)_55%)]">
+        <CardContent className="pt-6">
           <MacroBars consumed={totals} goal={goal} />
         </CardContent>
       </Card>

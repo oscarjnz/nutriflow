@@ -88,6 +88,7 @@ export function LogClient() {
           ? await importAndLogMealAction({ barcode: selected.barcode, grams, mealType })
           : await logMealAction({ foodId: selected.id, grams, mealType });
       if (res.ok) {
+        if (typeof navigator !== 'undefined' && 'vibrate' in navigator) navigator.vibrate(12);
         toast.success(`${selected.nameEs} agregado`);
         resetAfterLog();
         router.refresh();
@@ -117,7 +118,7 @@ export function LogClient() {
   return (
     <main className="space-y-5 p-5">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Registrar</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Registrar</h1>
         <p className="text-[var(--color-muted-foreground)] text-sm">
           Busca un alimento y agrégalo en segundos.
         </p>
@@ -133,9 +134,9 @@ export function LogClient() {
               role="tab"
               aria-selected={active}
               onClick={() => setMealType(m.value)}
-              className={`flex-1 rounded-lg border px-2 py-2 text-xs font-medium transition-[background-color,border-color,transform] duration-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${
+              className={`flex-1 rounded-xl border px-2 py-2 text-xs font-medium transition-[background-color,border-color,transform,box-shadow] duration-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] ${
                 active
-                  ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
+                  ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-[0_6px_16px_-8px_color-mix(in_srgb,var(--color-primary)_60%,transparent)]'
                   : 'border-[var(--color-border)] bg-[var(--color-background)]'
               }`}
             >
@@ -200,7 +201,7 @@ export function LogClient() {
           return (
             <li
               key={food.id}
-              className="overflow-hidden rounded-xl border border-[var(--color-border)]"
+              className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-[var(--shadow-soft)]"
               style={{
                 animation: 'log-in 240ms cubic-bezier(0.23,1,0.32,1) both',
                 animationDelay: `${Math.min(i, 8) * 30}ms`,

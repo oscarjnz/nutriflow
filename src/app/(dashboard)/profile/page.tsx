@@ -1,8 +1,11 @@
 import { UserButton } from '@clerk/nextjs';
+import { Target } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import { SignOutButton } from '@/components/shared/sign-out-button';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { requireUser } from '@/lib/auth/get-user';
 
@@ -41,6 +44,12 @@ export default async function ProfilePage() {
               <dd className="font-medium capitalize">{user.units}</dd>
             </div>
           </dl>
+          <Button asChild variant="outline" className="w-full">
+            <Link href="/goals">
+              <Target className="h-4 w-4" />
+              Ajustar metas
+            </Link>
+          </Button>
           <SignOutButton />
         </CardContent>
       </Card>

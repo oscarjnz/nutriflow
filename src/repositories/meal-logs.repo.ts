@@ -128,6 +128,24 @@ export async function getDayMacroTotals(
   });
 }
 
+/**
+ * Soft-delete or restore a single logged item. RLS (meal_items policy cascades
+ * to the parent meal_log owner) guarantees the user can only touch their own
+ * rows, so id alone is a safe target. Used for delete + undo on the dashboard.
+ */
+export async function setMealItemDeleted(
+  user: AppUserRef,
+  mealItemId: string,
+  deleted: boolean,
+): Promise<void> {
+  await withUserContext(user.clerkId, async (tx: AppDb) => {
+    await tx
+      .update(mealItems)
+      .set({ deletedAt: deleted ? new Date() : null })
+      .where(eq(mealItems.id, mealItemId));
+  });
+}
+
 export interface DayEntry {
   mealItemId: string;
   mealLogId: string;

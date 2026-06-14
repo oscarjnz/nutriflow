@@ -4,6 +4,8 @@ import { and, desc, eq } from 'drizzle-orm';
 
 import { type AppDb, withUserContext } from '@/db/client';
 import { userGoals } from '@/db/schema';
+import { newId } from '@/lib/crypto/uuid';
+import type { SetGoal } from '@/lib/validation/goals';
 import type { AppUserRef } from '@/repositories/meal-logs.repo';
 
 /**
@@ -41,4 +43,31 @@ export async function getActiveGoal(user: AppUserRef): Promise<MacroGoal> {
   );
 
   return rows[0] ?? DEFAULT_GOAL;
+}
+
+/**
+ * Replace the user's active goal: deactivate the current one and insert a new
+ * active row dated today. History is preserved (old rows stay, inactive) so a
+ * future "goal timeline" can show how targets evolved.
+ */
+export async function setGoal(user: AppUserRef, targets: SetGoal): Promise<void> {
+  const today = new Date().toISOString().slice(0, 10);
+
+  await withUserContext(user.clerkId, async (tx: AppDb) => {
+    await tx
+      .update(userGoals)
+      .set({ active: false })
+      .where(and(eq(userGoals.userId, user.id), eq(userGoals.active, true)));
+
+    await tx.insert(userGoals).values({
+      id: newId(),
+      userId: user.id,
+      calorieTarget: targets.calorieTarget,
+      proteinTarget: targets.proteinTarget,
+      carbsTarget: targets.carbsTarget,
+      fatTarget: targets.fatTarget,
+      active: true,
+      startsOn: today,
+    });
+  });
 }

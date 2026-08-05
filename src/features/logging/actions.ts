@@ -98,7 +98,11 @@ export async function logMealAction(input: unknown): Promise<LogMealResult> {
   }
 
   try {
-    const item = await prepareMealItem(parsed.data.foodId, parsed.data.grams);
+    const item = await prepareMealItem(
+      parsed.data.foodId,
+      parsed.data.grams,
+      parsed.data.source ?? 'manual',
+    );
     await createMealLog(user, {
       mealType: parsed.data.mealType,
       loggedAt: new Date(),

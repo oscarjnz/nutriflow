@@ -41,6 +41,9 @@ export const quickLogSchema = z.object({
   foodId: z.string().uuid(),
   grams: z.number().positive().max(100_000),
   mealType: mealTypeSchema,
+  /** Defaults to 'manual' (prepareMealItem's default) when omitted - the web
+   * client never sends this; Flutter's NLP-driven logging screen sends 'nlp'. */
+  source: mealItemSourceSchema.optional(),
 });
 
 export type QuickLog = z.infer<typeof quickLogSchema>;

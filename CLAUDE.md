@@ -490,6 +490,18 @@ Formato de entrada:
 Contexto / decision / aprendizaje en 2-4 lineas. Por que importa para el futuro.
 ```
 
+### 2026-08-05 - Resuelto el 404 de la raiz: el middleware ahora redirige en vez de esconder
+
+`src/middleware.ts` dejo de llamar `auth.protect()`. Ahora resuelve la sesion con `await auth()` y, si no hay `userId`, responde `307` a `/sign-in?redirect_url=<ruta+query>`. `/api(.*)`, `/trpc(.*)` y `/__clerk(.*)` quedan fuera del guard: los once Route Handlers ya hacen su propio `getUser()` + 401 y el cron valida su bearer, asi que el middleware ya no tiene nada que aportar ahi salvo convertir 401 en 404.
+
+Con esto se cierran de una sola vez los dos sintomas que venian arrastrandose: la raiz publica ya no da 404 al visitante anonimo, y `/api/*` sin token devuelve `401 {"error":"unauthorized"}` en vez del 404 que hizo perder tiempo en el diagnostico del 2026-08-02. Verificado contra el dev server en 3002 sin sesion: `/` y `/plan` y `/log?x=1` -> 307 al sign-in con el `redirect_url` correcto; `/api/goals` y `/api/onboarding/status` -> 401; `/sign-in` y `/sign-up` -> 200. Suite completa en verde: typecheck, lint (0 errores) y los 75 tests.
+
+Efecto colateral que hay que tener presente: una ruta inexistente ahora responde 307 al sign-in para el usuario deslogueado, y el 404 real solo lo ve quien tiene sesion. Es el comportamiento normal de una app enteramente autenticada, no un bug.
+
+**Aprendizaje del arreglo:** quitar el guard destapo un 500 en `/api/cron/keep-alive`. La causa era que `env.CRON_SECRET` **lanza** cuando la variable falta (validacion perezosa con Zod en `src/env.server.ts`), y en local nunca se puso; el 404 del middleware lo venia tapando. Se envolvio la lectura en `readCronSecret()`, que loguea y deniega con 401 en vez de reventar. Leccion general: cada vez que se retire una capa de proteccion global, revisar que los handlers de abajo no dependieran de ella para esconder fallos de configuracion.
+
+Sigue pendiente lo que ya estaba: igualar `NEXT_PUBLIC_APP_URL` en Vercel (id `KLsmv23j5hZomNdg`) con el valor de `.env.local`, recordando que requiere redeploy por ser `NEXT_PUBLIC_*`, y rotar la `CLERK_SECRET_KEY` de produccion.
+
 ### 2026-08-05 - Dominio propio `nutriflow.dpdns.org` en produccion, y como se adjunto
 
 El proyecto de Vercel ya sirve en `https://nutriflow.dpdns.org`, verificado y con certificado emitido. `GET /sign-in` responde 200 desde el dominio. Como la proteccion del proyecto es `all_except_custom_domains`, el dominio quedo publico sin desactivar nada, y los `*.vercel.app` siguen tras el SSO de Vercel.

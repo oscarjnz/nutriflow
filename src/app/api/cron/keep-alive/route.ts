@@ -13,9 +13,25 @@ import { pingDatabase } from '@/repositories/health.repo';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+/**
+ * `env.CRON_SECRET` throws when the variable is missing. Since the middleware
+ * no longer shields `/api`, that throw would surface as a 500 to any anonymous
+ * caller in an environment where the secret was never configured. Deny instead,
+ * and log why so a misconfigured deploy is still visible.
+ */
+function readCronSecret(): string | null {
+  try {
+    return env.CRON_SECRET;
+  } catch (error) {
+    console.error('[cron/keep-alive] CRON_SECRET is not configured', error);
+    return null;
+  }
+}
+
 export async function GET(request: Request): Promise<NextResponse> {
+  const secret = readCronSecret();
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
+  if (!secret || authHeader !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 

@@ -44,6 +44,9 @@ const fieldSchemas = {
 
   // Runtime
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+
+  // Cron (Vercel keep-alive job authentication)
+  CRON_SECRET: z.string().min(1, 'CRON_SECRET is required'),
 } as const;
 
 type FieldKey = keyof typeof fieldSchemas;

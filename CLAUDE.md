@@ -505,7 +505,11 @@ El alta devuelve un reto TXT (`_vercel.<dominio>` = `vc-domain-verify=...`) que 
 
 **Hallazgo de producto abierto:** ahora que la raiz es publica, un visitante anonimo en `https://nutriflow.dpdns.org/` recibe un **404**, no un redirect a `/sign-in`. Es el `auth.protect()` del middleware haciendo lo que ya documenta la entrada de abajo (`X-Clerk-Auth-Reason: protect-rewrite, session-token-and-uat-missing`). Con el sitio publico esto ya es un bug de cara al usuario, no una curiosidad interna: hay que hacer que `/` redirija a `/sign-in` para el usuario deslogueado.
 
-`CRON_SECRET` ya estaba creada en Vercel (Preview y Production), asi que el cron keep-alive quedo operativo con el deploy. `NEXT_PUBLIC_APP_URL` sigue apuntando al valor viejo; hoy no la lee ningun archivo salvo su propia declaracion en `env.client.ts`, asi que no rompe nada, pero conviene actualizarla antes de que alguien la use.
+`CRON_SECRET` ya estaba creada en Vercel (Preview y Production), asi que el cron keep-alive quedo operativo con el deploy.
+
+`NEXT_PUBLIC_APP_URL` esta **desincronizada a proposito de nadie**: en `.env.local` ya vale `https://nutriflow.dpdns.org`, pero la entrada de Vercel (id `KLsmv23j5hZomNdg`, targets preview+production) sigue con su valor de 2026-06-13. Hoy no importa porque ningun archivo la lee salvo su propia declaracion en `env.client.ts:20`, pero hay que igualarla antes de que alguien la use. Y ojo al cerrarla: las `NEXT_PUBLIC_*` se inyectan en el bundle en tiempo de build, asi que cambiar el valor en Vercel no surte efecto hasta que haya un redeploy.
+
+**Punto de partida para la proxima sesion:** arreglar el 404 de la raiz descrito arriba. El cambio es sacar `/` (y `/api/*`) del `auth.protect()` global de `src/middleware.ts` y redirigir el usuario deslogueado a `/sign-in`; eso resuelve de un golpe el bug de cara al usuario y el 401-vs-404 de la API que confundio el diagnostico el 2026-08-02.
 
 ### 2026-08-05 - Se salda la deuda de commits de la Fase 1 movil, y decisiones de .gitignore
 

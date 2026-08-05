@@ -490,6 +490,23 @@ Formato de entrada:
 Contexto / decision / aprendizaje en 2-4 lineas. Por que importa para el futuro.
 ```
 
+### 2026-08-05 - Dominio propio `nutriflow.dpdns.org` en produccion, y como se adjunto
+
+El proyecto de Vercel ya sirve en `https://nutriflow.dpdns.org`, verificado y con certificado emitido. `GET /sign-in` responde 200 desde el dominio. Como la proteccion del proyecto es `all_except_custom_domains`, el dominio quedo publico sin desactivar nada, y los `*.vercel.app` siguen tras el SSO de Vercel.
+
+**El detalle que hace falta recordar: `vercel domains add` NO sirve para este dominio.** Devuelve `domain_not_owned` (403) porque valida propiedad a nivel de cuenta y el apex `dpdns.org` no es nuestro; lo que tenemos es una delegacion de subdominio con el DNS en Cloudflare (`hugh.ns.cloudflare.com` / `sandy.ns.cloudflare.com`). La via que si funciona es el endpoint de dominios **a nivel de proyecto**, que el CLI no expone como subcomando:
+
+```
+vercel api "/v10/projects/<projectId>/domains?teamId=<teamId>" -X POST -f name=nutriflow.dpdns.org
+vercel api "/v9/projects/<projectId>/domains/nutriflow.dpdns.org/verify?teamId=<teamId>" -X POST
+```
+
+El alta devuelve un reto TXT (`_vercel.<dominio>` = `vc-domain-verify=...`) que hay que crear en Cloudflare antes de llamar a `verify`. DNS de la raiz: `CNAME @ -> cname.vercel-dns.com` en **DNS only**, nube gris; con el proxy encendido Vercel no puede emitir el certificado y el sintoma no se parece a la causa. Vercel marca `cname.vercel-dns.com` como `optional-change` frente a un target mas nuevo por proyecto, pero `misconfigured: false`, o sea que es valido y no hay que tocarlo.
+
+**Hallazgo de producto abierto:** ahora que la raiz es publica, un visitante anonimo en `https://nutriflow.dpdns.org/` recibe un **404**, no un redirect a `/sign-in`. Es el `auth.protect()` del middleware haciendo lo que ya documenta la entrada de abajo (`X-Clerk-Auth-Reason: protect-rewrite, session-token-and-uat-missing`). Con el sitio publico esto ya es un bug de cara al usuario, no una curiosidad interna: hay que hacer que `/` redirija a `/sign-in` para el usuario deslogueado.
+
+`CRON_SECRET` ya estaba creada en Vercel (Preview y Production), asi que el cron keep-alive quedo operativo con el deploy. `NEXT_PUBLIC_APP_URL` sigue apuntando al valor viejo; hoy no la lee ningun archivo salvo su propia declaracion en `env.client.ts`, asi que no rompe nada, pero conviene actualizarla antes de que alguien la use.
+
 ### 2026-08-05 - Se salda la deuda de commits de la Fase 1 movil, y decisiones de .gitignore
 
 Todo el trabajo que llevaba semanas sin commitear entro a `origin/master` en tres commits: el cron keep-alive (`vercel.json` + `/api/cron/keep-alive` + `health.repo.ts` + `CRON_SECRET`), los siete Route Handlers REST que consume Flutter, y la documentacion. Verificado antes de commitear: `typecheck`, `lint` (0 errores) y los 75 tests unitarios, todo en verde.

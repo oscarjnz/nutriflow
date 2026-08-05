@@ -490,6 +490,20 @@ Formato de entrada:
 Contexto / decision / aprendizaje en 2-4 lineas. Por que importa para el futuro.
 ```
 
+### 2026-08-05 - Ayuno intermitente entregado (mitad del Sprint 5), y por que ya no se puede loguear en local
+
+`/fasting` dejo de ser un placeholder "Proximamente" y es una pantalla real: temporizador en vivo, seis protocolos, cancelar, historial y racha. El schema, los indices y las policies RLS ya existian desde la migracion 0007/0011, asi que no hubo nada que migrar; todo el trabajo fue de aplicacion.
+
+Dos invariantes las sostiene la base de datos, no el codigo, y conviene no olvidarlo al tocar esto: el indice unico parcial `fasting_active_per_user` hace que un segundo `start` concurrente falle con 23505 en vez de dejar dos ayunos abiertos (el repo lo traduce a `already_active`), y el `check (end_at > start_at)` prohibe un ayuno de duracion cero. Por eso `endFast` puede ser un solo `update ... where end_at is null returning *`: el propio update es el candado, y garantiza que la racha se avance como maximo una vez por ayuno.
+
+Decision de producto sobre la racha: se guarda `current_count` + `last_logged_date`, pero **nunca se muestra el contador guardado directamente**. `displayedStreak()` lo contrasta con la fecha de hoy, porque un contador de 5 cuya ultima marca es de hace tres dias ya no es una racha de 5, es cero. Sin esa funcion la UI mentiria hasta que el usuario completara otro ayuno.
+
+Las fases metabolicas (`FASTING_PHASES`) son deliberadamente conservadoras y estan marcadas como orientativas en la UI, con nota de consultar a un profesional por encima de 24 h. Es el unico punto de la feature donde sobrevender seria facil y barato, y choca de frente con la prioridad 1 de este archivo.
+
+**Hallazgo que bloquea el desarrollo local de la web:** con las llaves `pk_live_`/`sk_live_` actuales en `.env.local`, Clerk se niega a cargar en `localhost`. El error exacto en consola es `Clerk: Production Keys are only allowed for domain "nutriflow.dpdns.org"`, y el sintoma es una pantalla de `/sign-in` completamente en blanco, sin error visible. O sea que hoy **no hay forma de ver ninguna pantalla autenticada en local**; solo se puede en produccion. La app Flutter no se entera porque autentica contra el dominio de produccion y manda el JWT ya emitido. Si se quiere volver a trabajar la UI web en local hay que tener a mano el par `pk_test_`/`sk_test_` de la instancia `hardy-tortoise-68.clerk.accounts.dev` y cambiarlo en `.env.local`.
+
+Verificacion hecha antes de dar por cerrado el bloque: typecheck, lint (0 errores), 120 tests unitarios (45 nuevos), `next build` en verde, y un script de integracion desechable que ejercito el repositorio entero contra la base real (22 comprobaciones, incluidas la del indice unico y la del upsert de racha) y luego revirtio la base a su estado exacto anterior. Lo unico sin verificar es el render.
+
 ### 2026-08-05 - Resuelto el 404 de la raiz: el middleware ahora redirige en vez de esconder
 
 `src/middleware.ts` dejo de llamar `auth.protect()`. Ahora resuelve la sesion con `await auth()` y, si no hay `userId`, responde `307` a `/sign-in?redirect_url=<ruta+query>`. `/api(.*)`, `/trpc(.*)` y `/__clerk(.*)` quedan fuera del guard: los once Route Handlers ya hacen su propio `getUser()` + 401 y el cron valida su bearer, asi que el middleware ya no tiene nada que aportar ahi salvo convertir 401 en 404.

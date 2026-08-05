@@ -476,3 +476,47 @@ Entrega siguiendo el protocolo de la seccion 9. Antes de codear, presenta las se
 - [ ] Motion con la curva estandar y `motion-reduce` donde aplique.
 - [ ] Probado en claro y oscuro.
 - [ ] Cero em dash. Iconos solo `lucide-react`.
+
+---
+
+## 15. Bitacora viva
+
+> Esta seccion la mantiene Claude Code, no el usuario. Es la memoria continua del proyecto: decisiones tomadas, aprendizajes, errores evitados y mejoras aplicadas. Se agrega una entrada nueva (mas reciente arriba) cada vez que ocurre algo con impacto real en el proyecto: un cambio de alcance, una decision arquitectonica no trivial, un bug de raiz no obvio, o una confirmacion del usuario sobre un enfoque no estandar. No se registran tareas rutinarias ni detalles que ya viven en el codigo o en `git log`.
+
+Formato de entrada:
+
+```
+### AAAA-MM-DD - titulo corto
+Contexto / decision / aprendizaje en 2-4 lineas. Por que importa para el futuro.
+```
+
+### 2026-08-05 - Se salda la deuda de commits de la Fase 1 movil, y decisiones de .gitignore
+
+Todo el trabajo que llevaba semanas sin commitear entro a `origin/master` en tres commits: el cron keep-alive (`vercel.json` + `/api/cron/keep-alive` + `health.repo.ts` + `CRON_SECRET`), los siete Route Handlers REST que consume Flutter, y la documentacion. Verificado antes de commitear: `typecheck`, `lint` (0 errores) y los 75 tests unitarios, todo en verde.
+
+Decision de que NO se versiona: `.agents/` (344K de SKILL.md de terceros, vendorizados y restaurables) y `.claude/settings.local.json` (permisos por maquina). Si se versiona `skills-lock.json`, que es el manifiesto del que esos archivos se restauran. Si en el futuro aparece un `.claude/settings.json` compartido (no `.local`), ese si debe commitearse: el `.gitignore` esta escrito para permitirlo.
+
+Pendiente en Vercel, y hasta que se haga el cron falla en produccion: crear la variable de entorno `CRON_SECRET` en el proyecto (`openssl rand -hex 32`). Vercel la reenvia sola como `Authorization: Bearer <valor>` en cada invocacion; sin ella el endpoint responde 401 y Supabase vuelve a quedar expuesta a auto-pausarse.
+
+### 2026-08-05 - TRASPASO desde la sesion de `nutriflowMobile`: este repo cambio de instancia de Clerk, y un aprendizaje que corrige un diagnostico viejo
+
+Entrada escrita desde una sesion cuyo working directory era `C:\Users\oscar\nutriflowMobile` (el cliente Flutter). Las sesiones de cada carpeta no se ven entre si, asi que esto es lo que una sesion de ESTE repo necesita saber y no puede deducir del codigo.
+
+**1. `.env.local` ya NO usa la instancia de Clerk de test. Ahora usa PRODUCCION.** Se cambiaron `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` y `CLERK_SECRET_KEY` de `pk_test_aGFy...`/`sk_test_...` (instancia `hardy-tortoise-68.clerk.accounts.dev`) al par `pk_live_...`/`sk_live_...` de la instancia `clerk.nutriflow.dpdns.org`. Consecuencia practica para cualquiera que levante la web en local: **las cuentas de la instancia de test ya no sirven**, hay que entrar con una cuenta de la instancia de produccion. Y ojo, el `clerk_id` es distinto entre instancias, asi que un mismo correo humano es un usuario NUEVO en la base de datos (sin perfil, sin onboarding) al cambiar de instancia. No es corrupcion de datos, es identidad distinta.
+
+**2. APRENDIZAJE IMPORTANTE, corrige un diagnostico equivocado: `auth.protect()` responde 404, NO 401.** Verificado leyendo el paquete (`node_modules/@clerk/nextjs/dist/esm/server/protect.js:23`, `return notFound()`). Como `src/middleware.ts` corre `auth.protect()` sobre todo lo que no sea `/sign-in`/`/sign-up`, y el matcher incluye `/(api|trpc)(.*)`, **cualquier peticion a `/api/*` sin un token que este middleware pueda verificar devuelve 404 aunque el `route.ts` exista perfecto en disco**. Esto es exactamente lo que confundio antes: unos 404 en `/api/goals` se atribuyeron a "un dev server viejo que no recogio los cambios", y la causa real era un choque de instancias de Clerk entre cliente y backend. **No volver a leer un 404 en `/api/*` como "el endpoint no existe": descartar primero el desajuste de llaves.** Si se quiere que la API responda 401 en vez de 404, hay que sacar `/api/*` del `auth.protect()` global y dejar que cada `route.ts` haga su propio `getUser()` + 401 (que ya lo hacen todos).
+
+**3. Estado real de los Route Handlers de la Fase 1 (mobile depende de ellos).** RESUELTO el 2026-08-05 desde una sesion de ESTE repo: todo lo que estaba untracked (`api/goals/`, `api/logging/`, `api/meal-plan/`, `api/nlp/`, `api/onboarding/complete/`, `api/onboarding/food-selections/`, `api/cron/`, `health.repo.ts`, `vercel.json`) quedo commiteado y pusheado a `origin/master`. Ver la entrada del 2026-08-05 mas abajo para el detalle y lo que falta configurar en Vercel.
+
+**4. Verificacion end-to-end hecha hoy contra el dev server local (puerto 3002) con las llaves de produccion:** `GET /api/onboarding/status 200`, `GET /api/foods/selectable 200`, `POST /api/onboarding/complete 200`, `GET /api/goals 200`, todas con un JWT real emitido por la app Flutter en Windows. O sea los endpoints estan sanos; lo que estaba roto era la configuracion, no el codigo.
+
+**5. Este proyecto corre en el puerto 3002, no 3000.** En esta maquina el 3000 y el 3001 los ocupan otros proyectos sin relacion. Levantar con `npm run dev -- -p 3002`. Y antes de diagnosticar nada, confirmar con `curl` que lo que responde en ese puerto es realmente `nutriflow`.
+
+**6. Deuda de seguridad abierta:** la `CLERK_SECRET_KEY` de produccion actualmente en `.env.local` (prefijo `sk_live_oTmb...`) es la misma que se pego en un chat el 2026-08-02 y **nunca se roto**. Conviene regenerarla en el dashboard de Clerk y actualizarla en `.env.local` y en Vercel.
+
+**7. El deploy de produccion en Vercel no es accesible publicamente.** El proyecto tiene `ssoProtection.enabled: true` con `deploymentType: "all_except_custom_domains"`, asi que cualquier URL `*.vercel.app` da 404 a quien no tenga acceso via Vercel SSO. Solo un dominio personalizado quedaria exento. Relevante si alguna vez se quiere que un tercero (o la app movil sin el server local) alcance el backend.
+
+**8. Nota de red para probar la app movil en un telefono:** el firewall de Windows de esta maquina bloquea el entrante al puerto 3002, asi que apuntar el cliente a la IP LAN da timeout. Para un telefono real hay que abrir ese puerto; desde la propia maquina (app de Windows) se usa `localhost` y no hay problema.
+
+### 2026-07-03 - Version mobile futura confirmada, no ahora
+El usuario planea una version mobile en Flutter del producto, pero es explicito: no sustituye nada del stack Next.js/Supabase actual (secciones 4-11 siguen vigentes tal cual), y no arranca todavia. Cuando llegue el momento avisara. Mientras tanto se genero un diseno en Figma partiendo de la UI web ya construida (onboarding, dashboard, meal-plan, Soft Structuralism) como base visual, ya que esa UI ya es mobile-first. Ese mismo diseno final en Figma sera la referencia cuando se arranque la version Flutter.

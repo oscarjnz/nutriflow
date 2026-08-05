@@ -1,0 +1,220 @@
+<svg width="790" height="860" viewBox="0 0 790 860" xmlns="http://www.w3.org/2000/svg" font-family="Plus Jakarta Sans, sans-serif">
+  <defs>
+    <filter id="shadow-soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#2C2720" flood-opacity="0.12"/>
+    </filter>
+    <filter id="shadow-float" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#2C2720" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <!-- ================= SCREEN 1: DASHBOARD / HOME ================= -->
+  <g transform="translate(0,0)">
+    <rect x="0" y="0" width="375" height="860" fill="#FDFDFC"/>
+
+    <!-- Header -->
+    <text x="20" y="46" font-size="14" fill="#766D60">Hola, Oscar</text>
+    <text x="20" y="74" font-size="24" font-weight="700" letter-spacing="-0.3" fill="#2C2720">Resumen de hoy</text>
+    <text x="355" y="60" font-size="14" font-weight="500" fill="#766D60" text-anchor="end">Metas</text>
+
+    <!-- Hero card -->
+    <rect x="20" y="92" width="335" height="420" rx="24" fill="#FFFFFF" filter="url(#shadow-float)"/>
+
+    <!-- Calorie ring: track + progress arc, same math as CalorieRing.tsx (circumference=2*pi*85, pct=66%) -->
+    <g transform="translate(187.5,209) rotate(-90)">
+      <circle cx="0" cy="0" r="85" fill="none" stroke="#F5F3EF" stroke-width="14"/>
+      <circle cx="0" cy="0" r="85" fill="none" stroke="#668B4B" stroke-width="14" stroke-linecap="round"
+        stroke-dasharray="534.07" stroke-dashoffset="181.6"/>
+    </g>
+    <text x="187.5" y="205" font-size="44" font-weight="600" letter-spacing="-0.5" fill="#2C2720" text-anchor="middle">1450</text>
+    <text x="187.5" y="228" font-size="12" fill="#766D60" text-anchor="middle">de 2200 kcal</text>
+    <text x="187.5" y="252" font-size="14" font-weight="500" fill="#668B4B" text-anchor="middle">750 restantes</text>
+
+    <!-- Macro bars -->
+    <g font-family="Plus Jakarta Sans, sans-serif">
+      <!-- Proteina -->
+      <text x="44" y="336" font-size="14" font-weight="500" fill="#2C2720">Proteína</text>
+      <text x="331" y="336" font-size="14" fill="#766D60" text-anchor="end">88 / 140 g</text>
+      <rect x="44" y="344" width="287" height="6" rx="3" fill="#F5F3EF"/>
+      <rect x="44" y="344" width="181" height="6" rx="3" fill="#668B4B"/>
+
+      <!-- Carbohidratos -->
+      <text x="44" y="380" font-size="14" font-weight="500" fill="#2C2720">Carbohidratos</text>
+      <text x="331" y="380" font-size="14" fill="#766D60" text-anchor="end">132 / 220 g</text>
+      <rect x="44" y="388" width="287" height="6" rx="3" fill="#F5F3EF"/>
+      <rect x="44" y="388" width="172" height="6" rx="3" fill="#F2960D"/>
+
+      <!-- Grasa -->
+      <text x="44" y="424" font-size="14" font-weight="500" fill="#2C2720">Grasa</text>
+      <text x="331" y="424" font-size="14" fill="#766D60" text-anchor="end">42 / 70 g</text>
+      <rect x="44" y="432" width="287" height="6" rx="3" fill="#F5F3EF"/>
+      <rect x="44" y="432" width="172" height="6" rx="3" fill="#E16A37"/>
+    </g>
+
+    <!-- Meals section -->
+    <text x="20" y="550" font-size="18" font-weight="600" letter-spacing="-0.2" fill="#2C2720">Comidas de hoy</text>
+    <rect x="291" y="530" width="64" height="26" rx="8" fill="none" stroke="#E6E2DB"/>
+    <text x="323" y="547" font-size="13" font-weight="500" fill="#2C2720" text-anchor="middle">Registrar</text>
+
+    <rect x="20" y="568" width="335" height="168" rx="16" fill="#FFFFFF" stroke="#E6E2DB" filter="url(#shadow-soft)"/>
+    <!-- Row 1 -->
+    <text x="36" y="598" font-size="14" font-weight="500" fill="#2C2720">Avena con plátano</text>
+    <text x="36" y="616" font-size="12" fill="#766D60">Desayuno · 420 kcal</text>
+    <line x1="20" y1="624" x2="355" y2="624" stroke="#E6E2DB"/>
+    <!-- Row 2 -->
+    <text x="36" y="654" font-size="14" font-weight="500" fill="#2C2720">Pollo a la plancha con arroz</text>
+    <text x="36" y="672" font-size="12" fill="#766D60">Almuerzo · 610 kcal</text>
+    <line x1="20" y1="680" x2="355" y2="680" stroke="#E6E2DB"/>
+    <!-- Row 3 -->
+    <text x="36" y="710" font-size="14" font-weight="500" fill="#2C2720">Yogurt natural con nueces</text>
+    <text x="36" y="728" font-size="12" fill="#766D60">Snack · 220 kcal</text>
+
+    <!-- Bottom nav -->
+    <rect x="0" y="796" width="375" height="64" fill="#FDFDFC" fill-opacity="0.95" stroke="#E6E2DB" stroke-width="1"/>
+    <!-- Inicio (active) -->
+    <g transform="translate(35,808)" stroke="#668B4B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+    </g>
+    <circle cx="47" cy="842" r="2" fill="#668B4B"/>
+    <text x="47" y="856" font-size="10" fill="#668B4B" text-anchor="middle">Inicio</text>
+
+    <!-- Plan -->
+    <g transform="translate(110,808)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M7 2v20"/>
+      <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+      <path d="M4 2c-.5 3-1 4.5-1 8a3 3 0 0 0 3 3h1"/>
+    </g>
+    <text x="122" y="856" font-size="10" fill="#766D60" text-anchor="middle">Plan</text>
+
+    <!-- Registrar FAB -->
+    <circle cx="187.5" cy="814" r="24" fill="#668B4B"/>
+    <g transform="translate(175.5,802)" stroke="#FDFDFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M5 12h14"/>
+      <path d="M12 5v14"/>
+    </g>
+
+    <!-- Ayuno -->
+    <g transform="translate(240,808)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <line x1="10" y1="2" x2="14" y2="2"/>
+      <line x1="12" y1="14" x2="15" y2="11"/>
+      <circle cx="12" cy="14" r="8"/>
+    </g>
+    <text x="252" y="856" font-size="10" fill="#766D60" text-anchor="middle">Ayuno</text>
+
+    <!-- Perfil -->
+    <g transform="translate(315,808)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </g>
+    <text x="327" y="856" font-size="10" fill="#766D60" text-anchor="middle">Perfil</text>
+  </g>
+
+  <!-- ================= SCREEN 2: REGISTRAR (LOG) ================= -->
+  <g transform="translate(415,0)">
+    <rect x="0" y="0" width="375" height="860" fill="#FDFDFC"/>
+
+    <!-- Header -->
+    <text x="20" y="46" font-size="24" font-weight="700" letter-spacing="-0.3" fill="#2C2720">Registrar</text>
+    <text x="20" y="68" font-size="14" fill="#766D60">Busca un alimento y agrégalo en segundos.</text>
+
+    <!-- Meal type tabs -->
+    <rect x="20" y="88" width="76" height="36" rx="12" fill="#668B4B"/>
+    <text x="58" y="110" font-size="12" font-weight="500" fill="#FDFDFC" text-anchor="middle">Desayuno</text>
+    <rect x="104" y="88" width="76" height="36" rx="12" fill="none" stroke="#E6E2DB"/>
+    <text x="142" y="110" font-size="12" font-weight="500" fill="#2C2720" text-anchor="middle">Almuerzo</text>
+    <rect x="188" y="88" width="76" height="36" rx="12" fill="none" stroke="#E6E2DB"/>
+    <text x="226" y="110" font-size="12" font-weight="500" fill="#2C2720" text-anchor="middle">Cena</text>
+    <rect x="272" y="88" width="83" height="36" rx="12" fill="none" stroke="#E6E2DB"/>
+    <text x="313" y="110" font-size="12" font-weight="500" fill="#2C2720" text-anchor="middle">Snack</text>
+
+    <!-- Search input -->
+    <rect x="20" y="140" width="335" height="44" rx="8" fill="#FDFDFC" stroke="#E6E2DB"/>
+    <g transform="translate(32,152)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <circle cx="8.5" cy="8.5" r="6.5"/>
+      <line x1="18" y1="18" x2="13.5" y2="13.5"/>
+    </g>
+    <text x="56" y="167" font-size="14" fill="#766D60">Arroz, pollo, aguacate…</text>
+
+    <!-- Barcode link -->
+    <g transform="translate(20,198)" stroke="#766D60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M2 2v10M6 2v10M9 2v10M13 2v10M16 2v10"/>
+    </g>
+    <text x="42" y="210" font-size="12" font-weight="500" fill="#766D60">¿Tienes el código de barras?</text>
+
+    <!-- Result row 1: collapsed -->
+    <rect x="20" y="230" width="335" height="56" rx="16" fill="#FFFFFF" stroke="#E6E2DB" filter="url(#shadow-soft)"/>
+    <text x="36" y="256" font-size="14" font-weight="500" fill="#2C2720">Avena en hojuelas</text>
+    <text x="36" y="274" font-size="12" fill="#766D60">68 kcal / 100 g</text>
+    <g transform="translate(323,250)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M5 12h14"/>
+      <path d="M12 5v14"/>
+    </g>
+
+    <!-- Result row 2: expanded -->
+    <rect x="20" y="298" width="335" height="188" rx="16" fill="#FFFFFF" stroke="#668B4B" stroke-width="1.5" filter="url(#shadow-soft)"/>
+    <text x="36" y="324" font-size="14" font-weight="500" fill="#2C2720">Pechuga de pollo</text>
+    <text x="36" y="342" font-size="12" fill="#766D60">165 kcal / 100 g</text>
+    <line x1="20" y1="356" x2="355" y2="356" stroke="#E6E2DB"/>
+
+    <!-- Stepper -->
+    <rect x="36" y="372" width="44" height="44" rx="8" fill="none" stroke="#E6E2DB"/>
+    <line x1="48" y1="394" x2="68" y2="394" stroke="#2C2720" stroke-width="2" stroke-linecap="round"/>
+    <text x="150" y="390" font-size="18" font-weight="600" fill="#2C2720" text-anchor="middle">150</text>
+    <text x="150" y="406" font-size="11" fill="#766D60" text-anchor="middle">gramos</text>
+    <rect x="200" y="372" width="44" height="44" rx="8" fill="none" stroke="#E6E2DB"/>
+    <line x1="212" y1="394" x2="232" y2="394" stroke="#2C2720" stroke-width="2" stroke-linecap="round"/>
+    <line x1="222" y1="384" x2="222" y2="404" stroke="#2C2720" stroke-width="2" stroke-linecap="round"/>
+    <text x="339" y="398" font-size="14" font-weight="600" fill="#2C2720" text-anchor="end">248 kcal</text>
+
+    <rect x="36" y="428" width="303" height="44" rx="8" fill="#668B4B"/>
+    <g transform="translate(150,441)" stroke="#FDFDFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M20 6 9 17l-5-5"/>
+    </g>
+    <text x="196" y="454" font-size="14" font-weight="600" fill="#FDFDFC" text-anchor="middle">Agregar</text>
+
+    <!-- Result row 3: collapsed -->
+    <rect x="20" y="498" width="335" height="56" rx="16" fill="#FFFFFF" stroke="#E6E2DB" filter="url(#shadow-soft)"/>
+    <text x="36" y="524" font-size="14" font-weight="500" fill="#2C2720">Arroz blanco cocido</text>
+    <text x="36" y="542" font-size="12" fill="#766D60">130 kcal / 100 g</text>
+    <g transform="translate(323,518)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M5 12h14"/>
+      <path d="M12 5v14"/>
+    </g>
+
+    <!-- Bottom nav -->
+    <rect x="0" y="796" width="375" height="64" fill="#FDFDFC" fill-opacity="0.95" stroke="#E6E2DB" stroke-width="1"/>
+    <g transform="translate(35,808)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+    </g>
+    <text x="47" y="856" font-size="10" fill="#766D60" text-anchor="middle">Inicio</text>
+
+    <g transform="translate(110,808)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M7 2v20"/>
+      <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+      <path d="M4 2c-.5 3-1 4.5-1 8a3 3 0 0 0 3 3h1"/>
+    </g>
+    <text x="122" y="856" font-size="10" fill="#766D60" text-anchor="middle">Plan</text>
+
+    <circle cx="187.5" cy="814" r="24" fill="#668B4B"/>
+    <g transform="translate(175.5,802)" stroke="#FDFDFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M5 12h14"/>
+      <path d="M12 5v14"/>
+    </g>
+    <circle cx="187.5" cy="846" r="2" fill="#668B4B"/>
+
+    <g transform="translate(240,808)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <line x1="10" y1="2" x2="14" y2="2"/>
+      <line x1="12" y1="14" x2="15" y2="11"/>
+      <circle cx="12" cy="14" r="8"/>
+    </g>
+    <text x="252" y="856" font-size="10" fill="#766D60" text-anchor="middle">Ayuno</text>
+
+    <g transform="translate(315,808)" stroke="#766D60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </g>
+    <text x="327" y="856" font-size="10" fill="#766D60" text-anchor="middle">Perfil</text>
+  </g>
+</svg>

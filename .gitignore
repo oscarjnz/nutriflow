@@ -64,3 +64,9 @@ Thumbs.db
 # clerk configuration (can include secrets)
 /.clerk/
 /data/off/
+
+# agent tooling: per-machine permissions and vendored third-party skill files.
+# `skills-lock.json` IS tracked - it is the manifest those files restore from.
+/.claude/settings.local.json
+/.claude/skills/
+/.agents/

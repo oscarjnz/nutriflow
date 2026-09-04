@@ -1,10 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-const isPublicRoute = createRouteMatcher([
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-]);
+const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)', '/privacidad(.*)']);
 
 /**
  * Routes that authenticate themselves and must NOT be handled here.
@@ -18,11 +15,7 @@ const isPublicRoute = createRouteMatcher([
  *
  * `/__clerk` is Clerk's own proxy path and must never be redirected.
  */
-const isSelfGuardedRoute = createRouteMatcher([
-  '/api(.*)',
-  '/trpc(.*)',
-  '/__clerk(.*)',
-]);
+const isSelfGuardedRoute = createRouteMatcher(['/api(.*)', '/trpc(.*)', '/__clerk(.*)']);
 
 export default clerkMiddleware(async (auth, request) => {
   if (isPublicRoute(request) || isSelfGuardedRoute(request)) return;

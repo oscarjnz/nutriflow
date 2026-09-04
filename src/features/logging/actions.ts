@@ -43,9 +43,7 @@ export async function searchFoodsAction(query: string): Promise<SearchFoodsResul
     let external: FoodSearchResult[] = [];
     try {
       const off = await searchOffProducts(q, TOTAL_RESULT_CAP - local.length);
-      external = off
-        .filter((p) => !localBarcodes.has(p.barcode))
-        .map(offFoodToResult);
+      external = off.filter((p) => !localBarcodes.has(p.barcode)).map(offFoodToResult);
     } catch (offErr: unknown) {
       console.error('searchFoodsAction: OFF fallback failed', offErr);
     }
@@ -110,7 +108,9 @@ export async function logMealAction(input: unknown): Promise<LogMealResult> {
 
   try {
     const items = await Promise.all(
-      requested.map((entry) => prepareMealItem(entry.foodId, entry.grams, entry.source ?? 'manual')),
+      requested.map((entry) =>
+        prepareMealItem(entry.foodId, entry.grams, entry.source ?? 'manual'),
+      ),
     );
     await createMealLog(user, {
       mealType: parsed.data.mealType,
@@ -125,9 +125,7 @@ export async function logMealAction(input: unknown): Promise<LogMealResult> {
   }
 }
 
-const importLogSchema = quickLogSchema
-  .omit({ foodId: true })
-  .extend({ barcode: barcodeSchema });
+const importLogSchema = quickLogSchema.omit({ foodId: true }).extend({ barcode: barcodeSchema });
 
 /**
  * Log an Open Food Facts product selected from search. Imports it into the

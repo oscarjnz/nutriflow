@@ -8,13 +8,7 @@ import { z } from 'zod';
 export const mealTypeSchema = z.enum(['breakfast', 'lunch', 'dinner', 'snack']);
 export type MealType = z.infer<typeof mealTypeSchema>;
 
-export const mealItemSourceSchema = z.enum([
-  'manual',
-  'nlp',
-  'barcode',
-  'recipe',
-  'favorite',
-]);
+export const mealItemSourceSchema = z.enum(['manual', 'nlp', 'barcode', 'recipe', 'favorite']);
 export type MealItemSource = z.infer<typeof mealItemSourceSchema>;
 
 export const mealItemInputSchema = z.object({

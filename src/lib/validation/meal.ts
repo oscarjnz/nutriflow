@@ -47,3 +47,23 @@ export const quickLogSchema = z.object({
 });
 
 export type QuickLog = z.infer<typeof quickLogSchema>;
+
+/**
+ * Several foods logged as ONE meal. Same grams-based shape as `quickLogSchema`
+ * minus `mealType`, which belongs to the meal and not to each food in it.
+ */
+export const quickLogItemSchema = quickLogSchema.omit({ mealType: true });
+
+export const quickLogBatchSchema = z.object({
+  mealType: mealTypeSchema,
+  items: z.array(quickLogItemSchema).min(1).max(50),
+});
+
+export type QuickLogBatch = z.infer<typeof quickLogBatchSchema>;
+
+/**
+ * What `logMealAction` accepts. The single-food shape is the original one and
+ * stays supported: the web UI sends it, and so do the mobile builds already
+ * installed on people's phones (v0.1.3 and earlier).
+ */
+export const quickLogInputSchema = z.union([quickLogBatchSchema, quickLogSchema]);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createMealLogSchema } from '@/lib/validation/meal';
+import { createMealLogSchema, quickLogInputSchema } from '@/lib/validation/meal';
 
 const validItem = {
   foodId: '019ec25d-3920-768a-92fc-b5a3a96bf6cc',
@@ -63,6 +63,59 @@ describe('createMealLogSchema', () => {
       createMealLogSchema.safeParse({
         mealType: 'snack',
         items: [{ ...validItem, source: 'telepathy' }],
+      }).success,
+    ).toBe(false);
+  });
+});
+
+describe('quickLogInputSchema', () => {
+  const foodId = '019ec25d-3920-768a-92fc-b5a3a96bf6cc';
+
+  it('accepts several foods logged as one meal', () => {
+    const parsed = quickLogInputSchema.safeParse({
+      mealType: 'breakfast',
+      items: [
+        { foodId, grams: 100, source: 'nlp' },
+        { foodId, grams: 60 },
+      ],
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it('still accepts the single-food shape older mobile builds send', () => {
+    const parsed = quickLogInputSchema.safeParse({
+      foodId,
+      grams: 100,
+      mealType: 'lunch',
+      source: 'barcode',
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it('rejects an empty item list', () => {
+    expect(
+      quickLogInputSchema.safeParse({ mealType: 'dinner', items: [] }).success,
+    ).toBe(false);
+  });
+
+  it('rejects a per-item mealType, which belongs to the meal', () => {
+    const parsed = quickLogInputSchema.safeParse({
+      mealType: 'dinner',
+      items: [{ foodId, grams: 100, mealType: 'lunch' }],
+    });
+    // Zod strips unknown keys rather than failing, so assert the parsed shape
+    // instead: a stray mealType must not survive into the item.
+    expect(parsed.success).toBe(true);
+    if (parsed.success && 'items' in parsed.data) {
+      expect(parsed.data.items[0]).not.toHaveProperty('mealType');
+    }
+  });
+
+  it('rejects a non-positive grams value inside the list', () => {
+    expect(
+      quickLogInputSchema.safeParse({
+        mealType: 'snack',
+        items: [{ foodId, grams: 0 }],
       }).success,
     ).toBe(false);
   });

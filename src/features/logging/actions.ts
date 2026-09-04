@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth/get-user';
 import { searchOffProducts } from '@/lib/off/client';
 import { barcodeSchema } from '@/lib/validation/barcode';
-import { quickLogSchema } from '@/lib/validation/meal';
+import { quickLogInputSchema, quickLogSchema } from '@/lib/validation/meal';
 import {
   findOrImportByBarcode,
   type FoodSearchResult,
@@ -89,24 +89,33 @@ export async function lookupBarcodeAction(rawBarcode: string): Promise<BarcodeLo
 
 export type LogMealResult = { ok: true } | { ok: false; error: string };
 
+/**
+ * Log one meal. Accepts either a single food or several foods that belong to
+ * the same meal - "dos huevos y pan" is ONE breakfast with three items, not
+ * three breakfasts, so the client sends them together and they land under a
+ * single `meal_log`.
+ */
 export async function logMealAction(input: unknown): Promise<LogMealResult> {
   const user = await requireUser();
 
-  const parsed = quickLogSchema.safeParse(input);
+  const parsed = quickLogInputSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: 'Datos de registro inválidos.' };
   }
 
+  const requested =
+    'items' in parsed.data
+      ? parsed.data.items
+      : [{ foodId: parsed.data.foodId, grams: parsed.data.grams, source: parsed.data.source }];
+
   try {
-    const item = await prepareMealItem(
-      parsed.data.foodId,
-      parsed.data.grams,
-      parsed.data.source ?? 'manual',
+    const items = await Promise.all(
+      requested.map((entry) => prepareMealItem(entry.foodId, entry.grams, entry.source ?? 'manual')),
     );
     await createMealLog(user, {
       mealType: parsed.data.mealType,
       loggedAt: new Date(),
-      items: [item],
+      items,
     });
     revalidatePath('/');
     return { ok: true };

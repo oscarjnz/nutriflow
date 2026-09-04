@@ -5,14 +5,22 @@ import { getUser } from '@/lib/auth/get-user';
 
 /**
  * REST entry point for Flutter's manual logging screen. Wraps `logMealAction`
- * verbatim - body validation (`quickLogSchema`) and macro-snapshot computation
- * (`prepareMealItem`/`computeMacros`) happen there, not here, so mobile never
- * needs its own copy of that math (CLAUDE.md §2).
+ * verbatim - body validation (`quickLogInputSchema`) and macro-snapshot
+ * computation (`prepareMealItem`/`computeMacros`) happen there, not here, so
+ * mobile never needs its own copy of that math (CLAUDE.md §2).
  *
- * Body: `{ foodId: uuid, grams: number, mealType: 'breakfast'|'lunch'|'dinner'|'snack',
- * source?: 'manual'|'nlp'|'barcode'|'recipe'|'favorite' }`. `source` defaults
- * to 'manual'; the mobile NLP-driven flow (POST /api/nlp/parse -> user picks a
- * candidate) should pass `'nlp'`.
+ * Two accepted body shapes:
+ *
+ * - Several foods as ONE meal, which is what the mobile logging screen sends:
+ *   `{ mealType, items: [{ foodId: uuid, grams: number, source? }, ...] }`.
+ * - A single food: `{ foodId: uuid, grams: number, mealType, source? }`. This
+ *   is the original shape and stays supported: the mobile builds already
+ *   installed on people's phones (v0.1.3 and earlier) send it.
+ *
+ * `mealType` is 'breakfast'|'lunch'|'dinner'|'snack', and `source` is
+ * 'manual'|'nlp'|'barcode'|'recipe'|'favorite' defaulting to 'manual'; the
+ * mobile NLP-driven flow (POST /api/nlp/parse -> user picks a candidate)
+ * passes 'nlp'.
  */
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
